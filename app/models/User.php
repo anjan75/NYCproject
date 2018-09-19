@@ -22,11 +22,11 @@ class User {
 		}
 	}
 
-	public function login($email, $password) {
+	/*public function login($email, $password) {
 		$this->db->query('SELECT * FROM users WHERE email = :email');
 		$this->db->bind(':email', $email);
 
-		$row = $this->db->single();
+		$row = $this->db->singleArray();
 
 		$hashed_password = $row->password;
 
@@ -35,13 +35,21 @@ class User {
 		} else {
 			return false;
 		}
+	}*/
+
+	public function login($email, $password) {
+		$this->db->query('SELECT * FROM users WHERE email = :email');
+		$this->db->bind(':email', $email);
+
+		$row = $this->db->singleArray();
+		return $row;
 	}
 
 	public function findUserByEmail($email) {
 		$this->db->query('SELECT * FROM users WHERE email = :email');
 		$this->db->bind(':email', $email);
 
-		$row = $this->db->single();
+		$row = $this->db->singleArray();
 
 		//check row
 		if($this->db->rowCount() > 0) {
@@ -55,16 +63,175 @@ class User {
 		$this->db->query('SELECT * FROM users WHERE id = :id');
 		$this->db->bind(':id', $id);
 
-		$row = $this->db->single();
+		$row = $this->db->singleArray();
 
 		return $row;
 	} 
+	//Show Users data in in USER ADMINISTRATOR
+	public function getUsers($inputs = null) {
+		$page = isset($inputs['page']) ? $inputs['page'] : 1;
+		$per_page = isset($inputs['per_page']) ? $inputs['per_page'] : 3;
+		$this->db->query('SELECT *
+						FROM EHOST_INFO 
+						INNER JOIN USER_PLANS
+						ON USER_PLANS.BSC_EMPLID = EHOST_INFO.BSC_EMPLID
+						INNER JOIN DEPARTMENTS
+						ON USER_PLANS.DEPT_ID = DEPARTMENTS.DEPARTMENT_ID
+						INNER JOIN BUSINESS_UNIT
+						ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
+						');
 
+		$row = $this->db->resultArraySet();
+		return $row;
+	} 
+	public function getUserByBSID($id) {
+
+		$this->db->query('SELECT *
+						FROM EHOST_INFO 
+						INNER JOIN USER_PLANS
+						ON USER_PLANS.BSC_EMPLID = EHOST_INFO.BSC_EMPLID
+						INNER JOIN DEPARTMENTS
+						ON USER_PLANS.DEPT_ID = DEPARTMENTS.DEPARTMENT_ID
+						INNER JOIN BUSINESS_UNIT
+						ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
+						WHERE EHOST_INFO.BSC_EMPLID = :BSC_EMPLID
+						');
+		$this->db->bind(':BSC_EMPLID', $id);
+
+		$row = $this->db->singleArray();
+		
+		return $row;
+	} 
+	public function findUserByBSID($id) {
+		$this->db->query('SELECT BSC_EMPLID FROM EHOST_INFO WHERE BSC_EMPLID = :BSC_EMPLID');
+		$this->db->bind(':BSC_EMPLID', $id);
+
+		$row = $this->db->singleArray();
+		$row_array =  (array) $row;
+		//print_r($row_array);
+		//check row
+		if(is_array($row_array) && count($row_array) > 0 && isset($row_array['BSC_EMPLID'])) 
+		{
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function getEHOSTDATA() {
+		$this->db->query('SELECT *			             
+		                  FROM EHOST_INFO
+		                  ');
+
+		$results = $this->db->resultArraySet();
+		
+		return $results;
+	}
+	public function getUserRoles($uid = null){
+		if ($uid != null and $uid > 0) {
+			$this->db->query('
+					SELECT * FROM USER_PLAN_ROLES
+					INNER JOIN ROLES
+					ON ROLES.ROLE_ID = USER_PLAN_ROLES.ROLE_ID
+					WHERE USER_PLAN_ROLES.BSC_EMPLID = :BSC_EMPLID
+				');
+			$this->db->bind(':BSC_EMPLID', $uid);
+			return $this->db->resultArraySet();
+		}
+		return null;
+	}
+	public function getRoles(){
+			$this->db->query('
+					SELECT ROLE_ID, ROLE_CODE, MUTUALLY_EXCLUSIVE FROM ROLES
+				');
+			return $this->db->resultArraySet();
+	}
+
+	public function getMultipleRoles($roles) {
+		$in  = str_repeat('?,', count($roles) - 1) . '?';
+		$rows = $this->db->executeQuery('SELECT ROLE_ID, ROLE_CODE, MUTUALLY_EXCLUSIVE FROM ROLES WHERE ROLE_ID IN('.$in.')', $roles);
+		return $rows;
+	}
+	
 	public function getPermission($id) {
 		$this->db->query('SELECT * FROM groups WHERE id = :id');
 		$this->db->bind(':id', $id);
-		$row = $this->db->single();
+		$row = $this->db->singleArray();
 
 		return $row;
 	}
+	
+
+	public function create_TO($data) {
+		$this->db->query('INSERT INTO posts (title, user_id, body) VALUES (:title, :user_id, :body)');
+
+		$this->db->bind(':title', $data['title']);
+		$this->db->bind(':user_id', $data['user_id']);
+		$this->db->bind(':body', $data['body']);
+
+		if($this->db->execute()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function update_TO($data){
+
+		$this->db->query('UPDATE EHOST_INFO SET FIRST_NAME = :FIRST_NAME, LAST_NAME = :LAST_NAME WHERE BSC_EMPLID = :BSC_EMPLID');
+
+		$this->db->bind(':BSC_EMPLID', $data['bscid']);
+		$this->db->bind(':FIRST_NAME', $data['first_name']);
+		$this->db->bind(':LAST_NAME', $data['last_name']);
+
+		if($this->db->execute()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function update_TO_User_Plans($data){
+		$this->db->query('UPDATE USER_PLANS SET STATUS_VALIDITY = :STATUS_VALIDITY, STATUS = :STATUS WHERE BSC_EMPLID = :BSC_EMPLID');
+
+		$this->db->bind(':BSC_EMPLID', $data['bscid']);
+		$this->db->bind(':STATUS_VALIDITY', $data['status_validity']);
+		$this->db->bind(':STATUS', $data['status']);
+
+		if($this->db->execute()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function delete_user_roles($id) {
+		$this->db->query('DELETE FROM USER_PLAN_ROLES WHERE BSC_EMPLID = :BSC_EMPLID');
+
+		$this->db->bind(':BSC_EMPLID', $id);
+
+		if($this->db->execute()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function add_user_roles($data) {
+		$this->db->query("INSERT INTO USER_PLAN_ROLES (PLAN_ROLE_ID, BSC_EMPLID, ROLE_ID, ROLE_CODE, CREATED_BY, CREATION_DATE) VALUES (:PLAN_ROLE_ID, :BSC_EMPLID, :ROLE_ID, :ROLE_CODE, :CREATED_BY, TO_DATE(:CREATION_DATE, 'yyyy/mm/dd HH24:MI:SS'))");
+		$date = date('Y/m/d');
+		
+		$this->db->bind(':PLAN_ROLE_ID', $data['plan_role_id']);
+		$this->db->bind(':BSC_EMPLID', $data['bscid']);
+		$this->db->bind(':ROLE_ID', $data['role_id']);
+		$this->db->bind(':ROLE_CODE', $data['role_code']);
+		$this->db->bind(':CREATED_BY', $data['user_id']);
+		$this->db->bind(':CREATION_DATE', $date);
+
+		if($this->db->execute()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
 }

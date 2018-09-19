@@ -1,0 +1,7 @@
+{
+    "name": "ci20380/ecr2",
+    "type": "n",
+    "require": {
+        "vlucas/valitron": "^1.4"
+    }
+}

@@ -28,7 +28,7 @@ class Users extends Controller {
 
 			//validate 
 			if(empty($data['email'])) {
-				$data['email_err'] = 'Please enter email';
+				$data['email_err'] = 'Please Enter BSCID';
 			}else {
 				if($this->userModel->findUserByEmail($data['email'])) {
 					$data['email_err'] = 'Email is taken';
@@ -89,7 +89,9 @@ class Users extends Controller {
 		}
 	}
 
-	public function login() {
+	/*public function login() {
+		//$e = $this->userModel->findUserByEmail('shyam@shyam.c');
+
 		//check for POST
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			//process form
@@ -147,23 +149,84 @@ class Users extends Controller {
 			//load view
 			$this->view('users/login', $data);
 		}
+	}*/
+
+	public function login() {
+		//$e = $this->userModel->findUserByEmail('shyam@shyam.c');
+
+		//check for POST
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			//process form
+			$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+			$data = [
+				'email' => trim($_POST['email']),
+				'password' => trim($_POST['password']),
+				'email_err' => '',
+				'password_err' => ''
+			];
+
+			if(empty($data['email'])) {
+				$data['email_err'] = 'Please Enter BSCID';
+			}
+
+			/*if(empty($data['password'])) {
+				$data['password_err'] = 'Please enter password';
+			}*/
+
+			if($this->userModel->findUserByBSID($data['email'])) {
+				$loggedInUser = $this->userModel->getUserByBSID($data['email']);
+
+				if($loggedInUser) {
+
+					//create session					
+					$roles = $this->userModel->getUserRoles($loggedInUser['BSC_EMPLID']);
+					$loggedInUser['roles'] = $roles;
+					$this->createUserSession($loggedInUser);
+				} else {
+					$data['password_err'] = 'Password incorrect';
+
+					$this->view('users/login', $data);
+				}
+			} else {
+				$data['email_err'] = 'No user found';
+				$this->view('users/login', $data);
+			}
+
+			
+
+		} else {
+			//init data
+			$data = [
+				'email' => '',
+				'password' => '',
+				'email_err' => '',
+				'password_err' => ''
+			];
+
+			//load view
+			$this->view('users/login', $data);
+		}
 	}
 
-	public function createUserSession($user, $permission) {
-		$_SESSION['user_id'] = $user->id;
-		$_SESSION['user_email'] = $user->email;
-		$_SESSION['user_name'] = $user->name;
-		$_SESSION['user_role'] = $user->role_group;
-		$_SESSION['permission'] = $permission->permissions;
+	public function createUserSession($user, $roles = null) {
+		
+		$_SESSION['user_id'] = $user['BSC_EMPLID'];
+		$_SESSION['user_email'] = $user['FIRST_NAME']."_".$user['LAST_NAME']."@mnr.org";
+		$_SESSION['user_name'] = $user['FIRST_NAME']." ".$user['LAST_NAME'];
+		$_SESSION['user_roles'] = $user['roles'];
+		$_SESSION['user_department_id'] = $user['DEPT_ID'];
+		$_SESSION['user_business_unit'] = $user['BUSINESS_UNIT'];
 
-		//redirect('posts');
 		redirect('dashboards/index');
 	}
+	
 
 	public function logout() {
 		unset($_SESSION['user_id']);
 		unset($_SESSION['user_email']);
 		unset($_SESSION['user_name']);
+		unset($_SESSION['user_roles']);
 		session_destroy();
 
 		redirect('users/login');

@@ -8,11 +8,11 @@
   			<h3>Employee Compliance Reporting 2</h3>
         </div>
         <hr />
-  			<form action="<?php echo URLROOT; ?>/users/login" method="post">
+  			<form action="<?php echo URLROOT; ?>/users/login" method="post" autocomplete="off">
 
   				<div class="form-group form-inline">
   					<label class="col-md-4" for="email">BSC ID: <sup>*</sup></label>
-  					<input type="email" name="email" class="col-md-8 form-control form-control-lg <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['email']; ?>">
+  					<input type="text" name="email" class="col-md-8 form-control form-control-lg <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['email']; ?>">
   					<span class="invalid-feedback"><?php echo $data['email_err']; ?></span>
   				</div>
 

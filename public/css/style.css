@@ -1,0 +1,145 @@
+
+/*****
+Custom CSS
+*****/
+#base_url{
+	display: none;
+}
+
+
+
+
+/***
+Table Styles
+***/
+table { 
+  display: inline-table !important;
+  width: 100%; 
+  border-collapse: collapse; 
+}
+/* Zebra striping */
+tr:nth-of-type(odd) { 
+  background: #eee; 
+}
+th { 
+  background: #333; 
+  color: white; 
+  font-weight: bold; 
+}
+td, th { 
+  padding: 6px; 
+  border: 1px solid #ccc; 
+  text-align: left; 
+  vertical-align: middle !important;
+}
+
+thead.thead-dark{
+	background-color: #0099ff !important; 
+	color: white; 
+	font-size: 70%;
+
+}
+thead.thead-dark th{
+	background-color: #0099ff !important; 
+	border-color: #ffffff !important;
+}
+
+.users-data-users table td {
+	text-align: center;
+}
+
+
+/***
+Form Styles
+***/
+.form-inline{
+	border-radius: 15px;
+}
+label{
+	justify-content: flex-end;
+}
+.form-check-input {
+	margin-top: 0.4rem;
+}
+.modal-footer{
+	display: inline !important;
+}
+
+
+/* New testing officer form */
+.user-roles-right input{
+	margin-right: 30px; margin-left: 7px;
+}
+.user-roles-right div.checkbox{
+	width: 100%;
+	text-align: right;
+}
+
+.user-roles-left div.form-check{
+	float: right;
+}
+.user-roles-left label{
+	margin-right: 30px;
+}
+
+
+
+
+
+/***
+Navbar Styles
+***/
+.navbar.bg-dark{
+	background:  #0000cc !important;
+}
+.navbar-dark .navbar-nav .nav-link{
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 500;
+}
+.dropdown-menu{
+	 background: #0099ff;
+}
+.dropdown-menu a{
+	 color: #ffffff;
+}
+.dropdown-menu a:hover{
+	 color: #000000;
+}
+
+
+/*navbar-nav>li >a:active {
+background-color:#D1C4E9 !important;
+}*/
+
+li:hover {
+background: #0099ff !important;
+}
+
+
+/*All modal Style*/
+
+.modal-header {
+   background:#0099ff !important;
+   color: white;
+}
+
+#genButtons{
+	padding-left:15%;
+	margin-top: 10px;
+}
+.button-box{
+	text-align: center;
+	margin-top: 20px;
+	/*display: grid;
+  	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  	grid-gap: 15px;*/
+}
+@media only screen
+and (min-device-width:768px)
+and (max-device-width:1028px){
+	.button-box{
+	text-align: center;
+	margin-top: 20px;
+}
+}

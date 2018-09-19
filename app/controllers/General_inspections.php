@@ -5,10 +5,9 @@ class General_inspections extends Controller {
   public function __construct() { 
     if(!isLoggedIn()) {
       redirect('users/login');
-
-    //$this->postModel = $this->model('Post');
-    //$this->userModel = $this->model('User');
     }
+    $this->userModel = $this->model('User');
+
   }
   
 
@@ -19,5 +18,17 @@ class General_inspections extends Controller {
     //$posts = $this->postModel->getPostsByUserId($id);
 
     $this->view('general_inspections/index');
+  }
+  public function get_ehost_data(){
+    
+    $users = $this->userModel->getEHOSTDATA();
+
+    
+    $data = [
+      'users' => $users
+    ];
+
+   
+    $this->view('general_inspections/ehost_data', $data);
   }
 }

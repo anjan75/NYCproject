@@ -17,13 +17,13 @@
     <input type="" class="col-md-2 form-control" id="" name="">
     <label class="col-md-2" for="" style="margin-right: -25px;">Department</label>
     <input type="" class="col-md-2 form-control" id="" name="">
-    <label class="col-md-2" for="" style="margin-right: -25px;">Occupation</label>
+    <label class="col-md-2" for="" style="margin-right: -25px;">Job Description</label>
     <input type="" class="col-md-2 form-control" id="" name="">
     </div>
     <hr />
 
     <table class="table table-bordered table-striped table-sm">
-    <thead class="thead-dark" style="background-color: black; color: white;">
+    <thead class="thead-dark" >
     <tr>
       <th scope="col" style="width: 5%">Obs#</th>
       <th scope="col" style="width: 5%">Modify</th>
@@ -36,7 +36,7 @@
     </thead>
     <tbody>
     <tr>
-      <th scope="row" id="ob">1</th>
+      <td scope="row" id="ob">1</td>
       <td style="text-align: center;">
         <i class="fas fa-pen"></i>
       </td>

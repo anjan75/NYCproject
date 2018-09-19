@@ -1,0 +1,269 @@
+
+/*****
+Responsive CSS
+*****/
+
+
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  
+  //CSS
+  
+}
+
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  
+  //CSS
+  
+}
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+  
+  
+	.user-roles-right input{
+		margin-right: 11px;
+	}
+
+  
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  
+  .user-roles-right input{
+		margin-right: 7px;
+	}
+  
+}
+
+
+
+
+/*modal-header X symbal*/
+.modal-header .close{
+	display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media 
+only screen and (max-width: 768px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	tr { border: 1px solid #ccc; }
+	
+	td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+
+		word-wrap: break-word; /*word-break: break-all;*/ white-space: normal;
+	}
+	
+	td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+	
+
+
+/*General Inspection table responsive */
+
+	.general-inspection td:nth-of-type(1):before { content: "Obs#"; }
+	.general-inspection td:nth-of-type(2):before { content: "Modify"; }
+	.general-inspection td:nth-of-type(3):before { content: "Delete"; }
+	.general-inspection td:nth-of-type(4):before { content: "Date"; }
+	.general-inspection td:nth-of-type(5):before { content: "Time"; }
+	.general-inspection td:nth-of-type(6):before { content: "Rule"; }
+	.general-inspection td:nth-of-type(7):before { content: "Result"; }
+
+
+
+/* dashboard-users table Label the data */
+	.dashboard-users td:nth-of-type(1):before { content: "First Name"; }
+	.dashboard-users td:nth-of-type(2):before { content: "Last Name"; }
+	.dashboard-users td:nth-of-type(3):before { content: "Job Title"; }
+	.dashboard-users td:nth-of-type(4):before { content: "Favorite Color"; }
+	.dashboard-users td:nth-of-type(5):before { content: "Wars of Trek?"; }
+	.dashboard-users td:nth-of-type(6):before { content: "Secret Alias"; }
+	.dashboard-users td:nth-of-type(7):before { content: "Date of Birth"; }
+	.dashboard-users td:nth-of-type(8):before { content: "Dream Vacation City"; }
+	.dashboard-users td:nth-of-type(9):before { content: "GPA"; }
+	.dashboard-users td:nth-of-type(10):before { content: "Arbitrary Data"; }
+
+/*USER-DATA ADMINISTRATION*/
+	.users-data-users td:nth-of-type(1):before { content: "Modify"; }
+	.users-data-users td:nth-of-type(2):before { content: "BSC ID"; }
+	.users-data-users td:nth-of-type(3):before { content: "Name"; }
+	.users-data-users td:nth-of-type(4):before { content: "Business Unit"; }
+	.users-data-users td:nth-of-type(5):before { content: "Deparment"; }
+	.users-data-users td:nth-of-type(6):before { content: "Job Code"; }
+	.users-data-users td:nth-of-type(7):before { content: "Job Description"; }
+	.users-data-users td:nth-of-type(8):before { content: "Position Number"; }
+	.users-data-users td:nth-of-type(9):before { content: "Position Description"; }
+	.users-data-users td:nth-of-type(10):before { content: "Process Role"; }
+	.users-data-users td:nth-of-type(11):before { content: "Management Center ID"; word-wrap: break-word; white-space: normal; line-height: 0.9;}
+	.users-data-users td:nth-of-type(12):before { content: "User Permision(s)"; }
+	.users-data-users td:nth-of-type(13):before { content: "Delete Record"; }
+
+	.ehost-users td:nth-of-type(1):before { content: "BSC_EMPLID"; }
+	.ehost-users td:nth-of-type(2):before { content: "WORK_FOR_AGENCY_EMPLID"; }
+	.ehost-users td:nth-of-type(3):before { content: "WORK_FOR_AGENCY"; }
+	.ehost-users td:nth-of-type(4):before { content: "EMPL_STATUS"; }
+	.ehost-users td:nth-of-type(5):before { content: "LAST_NAME"; }
+	.ehost-users td:nth-of-type(6):before { content: "FIRST_NAME"; }
+	.ehost-users td:nth-of-type(7):before { content: "MIDDLE_NAME"; }
+	.ehost-users td:nth-of-type(8):before { content: "DEPTID"; }
+	.ehost-users td:nth-of-type(9):before { content: "JOBCODE"; }
+	.ehost-users td:nth-of-type(10):before { content: "JOBCODE_DESCR"; }
+	.ehost-users td:nth-of-type(10):before { content: "B_SAFETY_SENSTV"; }
+
+/*tenentemp-administration*/
+	
+	.tenentemp-administration td:nth-of-type(1):before { content: "Modify"; }
+	.tenentemp-administration td:nth-of-type(2):before { content: "Start Date"; }
+	.tenentemp-administration td:nth-of-type(3):before { content: "End Date"; }
+	.tenentemp-administration td:nth-of-type(4):before { content: "Name"; }
+	.tenentemp-administration td:nth-of-type(5):before { content: "Emp ID"; }
+	.tenentemp-administration td:nth-of-type(6):before { content: "Employee Status"; }
+	.tenentemp-administration td:nth-of-type(7):before { content: "Railroad"; }
+	.tenentemp-administration td:nth-of-type(8):before { content: "Occupation"; }
+	.tenentemp-administration td:nth-of-type(9):before { content: "Delete Record"; }
+
+
+
+
+	
+/*	Rule- administration task-administrator*/
+	
+	.task-administrator td:nth-of-type(1):before { content: "Modify"; }
+	.task-administrator td:nth-of-type(2):before { content: "Description"; }
+	.task-administrator td:nth-of-type(3):before { content: "Status"; }
+
+
+/* rules-administrator*/
+	.rules-administrator td:nth-of-type(1):before { content: "Modify"; }
+	.rules-administrator td:nth-of-type(2):before { content: "Observation Code"; }
+	.rules-administrator td:nth-of-type(3):before { content: "Rule Number"; }
+	.rules-administrator td:nth-of-type(4):before { content: "Display Description"; }
+	.rules-administrator td:nth-of-type(5):before { content: "Category"; }
+	.rules-administrator td:nth-of-type(6):before { content: "Referenced Rule"; }
+	.rules-administrator td:nth-of-type(7):before { content: "FRA Reportable"; }
+	.rules-administrator td:nth-of-type(8):before { content: "Disposition Code"; }
+	.rules-administrator td:nth-of-type(9):before { content: "Status"; }
+
+
+/* Referenced-rules-administrator*/
+
+	.referenced-rules-administrator td:nth-of-type(1):before { content: "Modify"; }
+	.referenced-rules-administrator td:nth-of-type(2):before { content: "Display Name"; }
+	.referenced-rules-administrator td:nth-of-type(3):before { content: "Description"; }
+	.referenced-rules-administrator td:nth-of-type(4):before { content: "Source Type"; }
+	.referenced-rules-administrator td:nth-of-type(5):before { content: "Rule Source"; }
+	.referenced-rules-administrator td:nth-of-type(6):before { content: "Status"; }
+
+/* Railroad-administrator*/
+
+	.railroad-administrator td:nth-of-type(1):before { content: "Modify"; }
+	.railroad-administrator td:nth-of-type(2):before { content: "Display Name"; }
+	.railroad-administrator td:nth-of-type(3):before { content: "Description"; }
+	.railroad-administrator td:nth-of-type(4):before { content: "Status"; }
+	.railroad-administrator td:nth-of-type(5):before { content: "Delete"; }
+
+/*Track-Designation-Administration*/
+
+	.Track-Designation-Administration td:nth-of-type(1):before { content: "Modify"; }
+	.Track-Designation-Administration td:nth-of-type(2):before { content: "Display Name"; }
+	.Track-Designation-Administration td:nth-of-type(3):before { content: "Description"; }
+	.Track-Designation-Administration td:nth-of-type(4):before { content: "Status"; }
+	.Track-Designation-Administration td:nth-of-type(5):before { content: "Delete"; }
+
+/*Location-Types-Administration*/
+	.location-types-administration td:nth-of-type(1):before { content: "Modify"; }
+	.location-types-administration td:nth-of-type(2):before { content: "Display Name"; }
+	.location-types-administration td:nth-of-type(3):before { content: "Description"; }
+	.location-types-administration td:nth-of-type(4):before { content: "Status"; }
+	.location-types-administration td:nth-of-type(5):before { content: "Delete"; }
+/* SpeedSource-administrator*/
+
+	.speedSource-administrator td:nth-of-type(1):before { content: "Modify"; }
+	.speedSource-administrator td:nth-of-type(2):before { content: "Display Name"; }
+	.speedSource-administrator td:nth-of-type(3):before { content: "Description"; }
+	.speedSource-administrator td:nth-of-type(4):before { content: "Status"; }
+	.speedSource-administrator td:nth-of-type(5):before { content: "Delete"; }
+
+/*line-administration*/
+
+	.line-administration td:nth-of-type(1):before { content: "Modify"; }
+	.line-administration td:nth-of-type(2):before { content: "Name"; }
+	.line-administration td:nth-of-type(3):before { content: "Description"; }
+	.line-administration td:nth-of-type(4):before { content: "Status"; }
+	.line-administration td:nth-of-type(5):before { content: "Delete"; }
+
+
+.table td, .table th{
+		padding-left: 50%;
+		word-wrap: break-word; /*word-break: break-all; */white-space: normal;
+	}
+}

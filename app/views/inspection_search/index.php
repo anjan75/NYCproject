@@ -77,27 +77,27 @@
   <hr />
 
   <table class="table table-bordered table-striped table-sm">
-    <thead class="thead-dark" style="background-color: black; color: white; font-size: 70%">
+    <thead class="thead-dark" >
     <tr>
-      <th scope="col" style="width: 3%">Modify</th>
-      <th scope="col" style="width: 3%">Delete</th>
-      <th scope="col" style="width: 5%; text-align: center;">Inspection ID</th>
-      <th scope="col" style="width: 5%; text-align: center;">Observation ID</th>
-      <th scope="col" style="width: 5%; text-align: center;">Type of Inspection</th>
-      <th scope="col" style="width: 5%; text-align: center;">Testing Officer</th>
-      <th scope="col" style="width: 5%; text-align: center;">Observation Employee</th>
-      <th scope="col" style="width: 5%; text-align: center;">Depatrment</th>
-      <th scope="col" style="width: 5%; text-align: center;">Occupation</th>
-      <th scope="col" style="text-align: center;">Task</th>
-      <th scope="col" style="width: 5%; text-align: center;">Location Type</th>
-      <th scope="col" style="width: 5%; text-align: center;">Location</th>
-      <th scope="col" style="width: 5%; text-align: center;">Result</th>
-      <th scope="col" style="width: 15%; text-align: center;">Comments</th>
+      <th scope="col">Modify</th>
+      <th scope="col">Delete</th>
+      <th scope="col">Inspection ID</th>
+      <th scope="col">Observation ID</th>
+      <th scope="col">Type of Inspection</th>
+      <th scope="col">Testing Officer</th>
+      <th scope="col">Observation Employee</th>
+      <th scope="col">Depatrment</th>
+      <th scope="col">Occupation</th>
+      <th scope="col"">Task</th>
+      <th scope="col">Location Type</th>
+      <th scope="col">Location</th>
+      <th scope="col">Result</th>
+      <th scope="col">Comments</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-      <th scope="row">1</th>
+      <td scope="row">1</td>
       <td>Mark</td>
       <td>Otto</td>
       <td>Otto</td>
@@ -113,7 +113,7 @@
       <td>@mdo</td>
     </tr>
     <tr>
-      <th scope="row">1</th>
+      <td scope="row">1</td>
       <td>Mark</td>
       <td>Otto</td>
       <td>Otto</td>

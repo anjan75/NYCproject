@@ -32,7 +32,8 @@ function isLoggedIn() {
 	}
 }
 
-function hasPermission($key) {
+/*function hasPermission($key) {
+	return true;
 	if(isset($_SESSION['permission'])){
 		$permissions = json_decode($_SESSION['permission'], true);
 	    if($permissions[$key] == true) {
@@ -41,7 +42,7 @@ function hasPermission($key) {
 	    }
 	    return false;
     }
-}
+}*/
 
 function hasPermissionTest($key) {
 	$permissions = json_decode($_SESSION['permission'], true);
@@ -50,4 +51,38 @@ function hasPermissionTest($key) {
 		    return true;
 	    }
 	     return false;
+}
+///is_user_role admin/view reports
+function isUserRole($role_code=''){
+	if (!empty($role_code)) {
+		if(isset($_SESSION['user_roles'])){
+			foreach ($_SESSION['user_roles'] as $role) {
+				if ($role['ROLE_CODE'] === $role_code) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function hasPermission($roles=array(), $business_unit=null) {
+	if(isset($_SESSION['user_roles'])){
+		$s_roles = $_SESSION['user_roles'];
+		if (is_array($roles) && count($roles) > 0) {
+		    foreach ($roles as $role) {
+		    	foreach ($s_roles as $s_role) {
+		    		if ($role === $s_role['ROLE_CODE']) {
+		    			
+		    			if ($business_unit === null) {
+								return true;
+						}elseif(trim($business_unit) == trim($_SESSION['user_business_unit'])){
+							return true;
+						}
+		    		}
+		    	}
+		    }
+		}
+    }
+    return false;
 }
