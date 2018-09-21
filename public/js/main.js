@@ -215,6 +215,79 @@ $(document).ready(function(){
 			});
 	});
 
+	/***
+	create railroad
+	***/
+	$("form#newRailroadForm").on("submit", function(e){
+		e.preventDefault();
+		var formData = $(this).serialize();
+		$.ajax({
+				type: 'POST',
+				url: base_url+'/railroads/create_rail_road',
+				data: formData,
+				success: function(data){
+					console.log(data);
+					if (data == 200) {
+						showSuccessMsg();
+						setTimeout(function(){
+					        location.reload();
+					    }, 3000)   
+					}else{
+						var data = JSON.parse(data);
+						showErrorMsg(data);
+					}
+				},
+				error: function(e){
+					console.log(e);
+				}
+			});
+	});
+
+	$(".updateRailRoadModal").on("click", function(e){
+		e.preventDefault();
+		$('#updateRailroadForm .status_message_div').html();
+		
+		var railroad_id = $(this).find('.hidden_railroad_id').val();
+		var description = $(this).next().text();
+		var html = ' <input type="hidden" name="railroad_id" value="'+railroad_id+'" />';
+
+		
+		$('#updateRailroadForm #description').val(description);
+		$('#updateRailroadForm .status_message_div').append(html);
+		
+		//var bscid = $(this).next().html();
+		$('#updateRailroad').modal('show');
+	});
+	/***
+	Update Railroad
+	***/
+	$("form#updateRailroadForm").on("submit", function(e){
+		e.preventDefault();
+		var formData = $(this).serialize();
+		$.ajax({
+				type: 'POST',
+				url: base_url+'/railroads/update_rail_road',
+				data: formData,
+				success: function(data){
+					console.log(data);
+					if (data == 200) {
+						showSuccessMsg();
+						setTimeout(function(){
+					        location.reload();
+					    }, 3000)   
+					}else{
+						var data = JSON.parse(data);
+						showErrorMsg(data);
+					}
+				},
+				error: function(e){
+					console.log(e);
+				}
+			});
+	});
+
+
+
 	
 
 	$("#newToReset").on("click", function(e){
@@ -239,6 +312,8 @@ $(document).ready(function(){
 	});
 
 
+
+
 	/***
 	DATA TABLE
 	***/
@@ -246,13 +321,13 @@ $(document).ready(function(){
 	 var table = $('.users-data-users').DataTable({
 			          	responsive:true,
 					    "rowCallback": function (row, data, index) {
-      //check to see if row is expanded
-      if(!$(row).attr('role') || $(row).attr('role') != 'row' || $(row).hasClass('parent')){
-        return;
-      }
-      //add class to expand row
-      $(row).addClass('parent');
-    }
+					      //check to see if row is expanded
+					    if(!$(row).attr('role') || $(row).attr('role') != 'row' || $(row).hasClass('parent')){
+					        return;
+					    }
+					      //add class to expand row
+					      $(row).addClass('parent');
+					    }
 			    });
 
 

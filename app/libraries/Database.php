@@ -16,6 +16,7 @@
     private $dbh;
     private $stmt;
     private $error;
+    private $cursor;
 
     public function __construct(){
       // Set DSN
@@ -42,6 +43,8 @@
       // Create PDO instance
       try{
         $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
+        $this->conn = oci_connect("ecr2", "45ecR.77", "lirr-bschdev.lirr.org:10100/ECRDEV");
+        
       } catch(PDOException $e){
         $this->error = $e->getMessage();
         echo $this->error;
@@ -102,6 +105,14 @@
       return $this->stmt->execute();
     }
 
+    public function pro_execute(){
+      return $this->stmt->execute();
+    }
+
+    public function oci_new_cursor(){
+      return oci_new_cursor($this->dbh);
+    }
+
     // Get result set as array of objects
     public function resultSet(){
       $this->execute();
@@ -134,8 +145,48 @@
       return $rows;
     }
 
+
     // Get row count
     public function rowCount(){
       return $this->stmt->rowCount();
     }
+
+    /**
+     * Run a call to a stored procedure that returns a REF CURSOR data
+     * set in a bind variable.  The data set is fetched and returned.
+     *
+     * Call like Db::refcurexecfetchall("begin myproc(:rc, :p); end",
+     *                            "Fetch data", ":rc", array(array(":p", $p, -1)))
+     * The assumption that there is only one refcursor is an artificial
+     * limitation of refcurexecfetchall()
+     *
+     * @param string $sql A SQL string calling a PL/SQL stored procedure
+     * @param string $action Action text for End-to-End Application Tracing
+     * @param string $rcname the name of the REF CURSOR bind variable
+     * @param array  $otherbindvars Binds. Array (bv_name, php_variable, length)
+     * @return array Returns an array of tuples
+    REF LINK : https://docs.oracle.com/cd/17781_01/appdev.112/e18555/ch_six_ref_cur.htm#TDPPH218
+    EXAMPLE :   $sql = "BEGIN get_equip(:id, :rc); END;";
+                $res = $db->refcurExecFetchAll($sql, "Get Equipment List", "rc", array(array(":id", $empid, -1)));
+
+     */
+    public function refcurExecFetchAll($sql, $action, $rcname, $otherbindvars = array()) {
+        $this->stid = oci_parse($this->conn, $sql);
+        //$this->stid = $this->query($sql);
+        $rc = oci_new_cursor($this->conn);
+        
+        oci_bind_by_name($this->stid, $rcname, $rc, -1, OCI_B_CURSOR);
+        foreach ($otherbindvars as $bv) {
+            // oci_bind_by_name(resource, bv_name, php_variable, length)
+            oci_bind_by_name($this->stid, $bv[0], $bv[1], $bv[2]);
+        }
+        oci_set_action($this->conn, $action);
+        oci_execute($this->stid);
+        oci_execute($rc); // run the ref cursor as if it were a statement id
+        oci_fetch_all($rc, $res);   
+        $this->stid = null;
+        return($res);
+    }
+
+
   }
