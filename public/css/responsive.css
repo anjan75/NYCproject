@@ -4,6 +4,7 @@ Responsive CSS
 *****/
 
 
+
 /* 
   ##Device = Tablets, Ipads (portrait)
   ##Screen = B/w 768px to 1024px
@@ -11,8 +12,12 @@ Responsive CSS
 
 @media (min-width: 768px) and (max-width: 1024px) {
   
-  //CSS
+ /*.btn-block {
+    width: 140%;
+    margin: 0 auto;
+  }
   
+  */
 }
 
 /* 
@@ -24,6 +29,7 @@ Responsive CSS
   
   //CSS
   
+
 }
 
 /* 
@@ -37,7 +43,16 @@ Responsive CSS
 	.user-roles-right input{
 		margin-right: 11px;
 	}
-
+  .label-right{
+            text-align: center;
+  }
+  .modal-footer  button{
+    margin-top: 10px;
+  }
+  .btn-block {
+    width: 40%;
+    margin: 0 auto;
+  }
   
 }
 
@@ -51,6 +66,16 @@ Responsive CSS
   .user-roles-right input{
 		margin-right: 7px;
 	}
+  .label-right{
+            text-align: center;
+  }
+  .modal-footer  button{
+    margin-top: 10px;
+  }
+  .btn-block {
+    width: 40%;
+    margin: 0 auto;
+  }
   
 }
 

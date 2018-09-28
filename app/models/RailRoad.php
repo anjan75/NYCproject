@@ -15,16 +15,17 @@ class RailRoad {
 		
 		/*$this->db->query("INSERT INTO RAILROAD (RAILROAD_ID, DESCRIPTION, CREATED_BY, CREATION_DATE) VALUES (:RAILROAD_ID, :DESCRIPTION, :CREATED_BY, TO_DATE(:CREATION_DATE, 'yyyy/mm/dd HH24:MI:SS'))");
 		$this->db->bind(':RAILROAD_ID', 200);*/
-		$r = 'Lorem ipsum';
-		$r1 = 2;
-		$r2 = "TO_DATE(:CREATION_DATE, 'yyyy/mm/dd HH24:MI:SS'))";
-		$query = 'BEGIN ECR2_PKG.Add_Railroad(:RAILROAD, :DESCRIPTION, :BUSINESS_UNIT_ID, :CREATED_BY, :CREATION_DATE); END;';
+		/*$r = 'Lorem ipsum';
+		$r1 = 2;*/
+		//$r2 = "TO_DATE(:CREATION_DATE, 'yyyy/mm/dd HH24:MI:SS'))";
+		$query = 'BEGIN ECR2_PKG.Add_Railroad(:RAILROAD, :DESCRIPTION, :BUSINESS_UNIT_ID, :CREATED_BY, :CREATION_DATE, :STATUS); END;';
 		$this->db->query($query);
-		$this->db->bind(':RAILROAD', $r);
+		$this->db->bind(':RAILROAD', $data['railroad']);
 		$this->db->bind(':DESCRIPTION', $data['description']);
-		$this->db->bind(':BUSINESS_UNIT_ID', $r1);
+		$this->db->bind(':BUSINESS_UNIT_ID', $data['business_unit_id']);
 		$this->db->bind(':CREATED_BY', $data['created_by']);
 		$this->db->bind(':CREATION_DATE', '');
+		$this->db->bind(':STATUS', $data['status']);
 
 		if($this->db->execute()) {
 			return true;
@@ -34,12 +35,16 @@ class RailRoad {
 	}
 
 	public function UpdateRailRoad($data = null) {
-		$data['creation_date'] = date('Y/m/d');
-		$this->db->query('UPDATE RAILROAD SET DESCRIPTION = :DESCRIPTION, CREATED_BY = :CREATED_BY WHERE RAILROAD_ID = :RAILROAD_ID');
+		$query = 'BEGIN ECR2_PKG.Update_Railroad(:RAILROAD_ID, :RAILROAD, :DESCRIPTION, :BUSINESS_UNIT_ID, :UPDATED_BY, :UPDATE_DATE, :STATUS); END;';
+		$this->db->query($query);
 
 		$this->db->bind(':RAILROAD_ID', $data['railroad_id']);
+		$this->db->bind(':RAILROAD', $data['railroad']);
 		$this->db->bind(':DESCRIPTION', $data['description']);
-		$this->db->bind(':CREATED_BY', $data['created_by']);
+		$this->db->bind(':BUSINESS_UNIT_ID', $data['business_unit_id']);
+		$this->db->bind(':UPDATED_BY', $data['updated_by']);
+		$this->db->bind(':UPDATE_DATE', '');
+		$this->db->bind(':STATUS', $data['status']);
 
 		if($this->db->execute()) {
 			return true;
@@ -66,7 +71,7 @@ class RailRoad {
 
 		return $row;
 	} 
-	public function getRailRoadByName($name) {
+/*	public function getRailRoadByName($name) {
 		$this->db->query('SELECT * FROM RAILROAD WHERE DESCRIPTION = :DESCRIPTION');
 		$this->db->bind(':DESCRIPTION', $name);
 
@@ -75,7 +80,7 @@ class RailRoad {
 
 		return $row;
 	} 
-	
+	*/
 	//Show Users data in in USER ADMINISTRATOR
 	public function getRailRoads($inputs = null) {
 		$page = isset($inputs['page']) ? $inputs['page'] : 1;

@@ -11,14 +11,50 @@ class User_data extends Controller {
   
 
   public function index() {
-    //get posts
-    //$id = $_SESSION['user_id'];
-    $users = $this->userModel->getUsers();
+    $data = null;
+    /*$users = $this->userModel->getUsers();
     foreach ($users as $ukey => $user) {
       $users[$ukey]['roles'] = $this->userModel->getUserRoles($user['BSC_EMPLID']);
     }
-    $data['users'] = $users;
+    $data['users'] = $users;*/
     $this->view('user_data/index', $data);
+  }
+
+  public function getUsers() {
+    $input_data['draw'] = $_POST["draw"];;
+    $input_data['orderByColumnIndex']  = $_POST['order'][0]['column'];
+    $input_data['orderBy'] = $_POST['columns'][$input_data['orderByColumnIndex']]['data'];
+    $input_data['orderType'] = $_POST['order'][0]['dir']; // ASC or DESC
+    $input_data['start']  = $_POST["start"];//Paging first record indicator.
+    $input_data['length'] = $_POST['length'];
+
+    $users = $this->userModel->getUsers($input_data);
+    foreach ($users as $ukey => $user) {
+      $roles = $this->userModel->getUserRoles($user['BSC_EMPLID']);
+      $role_str = "";
+      if (isset($roles)  && count($roles)) {
+        $i = 1;
+        foreach ($roles as $ses_roles) {
+          $role_str .=  $i.") ".$ses_roles['ROLE_CODE']."<br>";
+          $i++;
+        }
+      }
+      $users[$ukey]['MODIFY'] = "update";
+      $users[$ukey]['POSITION_NUMBER'] = "-";
+      $users[$ukey]['POSITION_DESCRIPTION'] = "-";
+      $users[$ukey]['POSITION_ROLE'] = "-";
+      $users[$ukey]['ROLES'] = $role_str;
+    }
+
+    $recordsTotal = count($users);
+    $recordsFiltered = count($users);
+    $response = array(
+        "draw" => intval($input_data['draw']),
+        "recordsTotal" => $recordsTotal,
+        "recordsFiltered" => $recordsFiltered,
+        "data" => $users
+    );
+    echo json_encode($response);
   }
   // create new testing officer
   public function create_TO(){
@@ -52,10 +88,13 @@ class User_data extends Controller {
           'status' => $input_data['status'],
         ];
         $roles = [];
-        $me_no_roles = $input_data['me_no_roles'];
-        $me_yes_roles = $input_data['me_yes_roles'];
-        foreach ($me_no_roles as $no_r) {
-            $roles[] = $no_r;
+        $me_no_roles = isset($input_data['me_no_roles']) ? $input_data['me_no_roles'] : '';
+        $me_yes_roles = isset($input_data['me_yes_roles']) ? $input_data['me_yes_roles'] : '';
+
+        if (is_array($me_no_roles) && count($me_no_roles) > 0) {
+          foreach ($me_no_roles as $no_r) {
+              $roles[] = $no_r;
+          }
         }
         if (is_array($me_yes_roles) && count($me_yes_roles) > 0) {
           foreach ($me_yes_roles as $yes_r) {

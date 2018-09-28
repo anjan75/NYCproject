@@ -43,7 +43,7 @@
           <div class="row">
             <div class="col-md-6">
                 <div class="form-group form-inline">
-                  <label class="col-md-6" for="Name">Name</label>
+                  <label class="col-md-6" for="LocationCode">Location Code</label>
                   <input class="form-control col-md-6" id="Name" type="text" placeholder="">
                 </div>
             </div>
@@ -73,18 +73,6 @@
         </form>
       </div>
       <div class="modal-footer" style=""> 
-        <!-- <div class="form-inline">
-          <div class="row" style="">
-            <div class="col-md-4">
-              <button type="button" class="btn btn-primary">Save</button>
-
-            </div>
-            <div class="col-md-4">
-               <button type="button" class="btn btn-secondary" >Reset</button>
-            </div>
-            <div class="col-md-4"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div>
-          </div>
-        </div> -->
         <button type="button" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-secondary" >Reset</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

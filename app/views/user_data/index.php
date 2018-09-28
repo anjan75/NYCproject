@@ -31,11 +31,11 @@
       <th scope="col">Process Role</th>
       <th scope="col">Management Center ID</th>
       <th scope="col">User Permision(s)</th>
-      <th scope="col">Delete Record</th>
+      <th scope="col">Status</th>
     </tr>
     </thead>
-    <tbody>
-      <?php $users = $data['users']; ?>
+  
+      <?php /*$users = $data['users']; ?>
       <?php if(is_array($users) && count($users)) { ?>
       <?php foreach($users as $user) { ?>
           <tr>
@@ -68,11 +68,11 @@
                 ?>
                 
             </td>
-            <td><a href="#" class="btnDelete"><i class="far fa-trash-alt"></i></a></td>
+            <td>Active</td>
           </tr>
     <?php  } ?>      
-    <?php  } ?>
-    </tbody>
+    <?php  }*/ ?>
+    
   </table>
 
   <div class="text-center"> 
@@ -164,32 +164,21 @@
         
       </div>
       <div class="modal-footer"> 
-        <!-- <div class="form-inline">
-          <div class="row" style="float:left;">
-            <div class="col-md-4">
-              <button type="button" class="btn btn-primary">Save</button>
-
+        <div class="container">
+          <div class="form-group row">
+            <div class="col-md-2 offset-md-3">
+                <button type="submit" name="newToSubmit" id="newToSubmit" class="btn btn-primary btn-sm btn-block">Save</button>
             </div>
-            <div class="col-md-4">
-               <button type="button" class="btn btn-secondary" >Reset</button>
+            <div class="col-md-2">
+               <button type="button" name="newToReset" id="newToReset" class="btn btn-secondary btn-sm btn-block line_reset">Reset</button>
             </div>
-            <div class="col-md-4"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div>
-          </div>
-        </div> -->
-      <div class="row">
-        <div class="col-md-4 text-center">
-          <button type="submit" name="newToSubmit" id="newToSubmit" class="btn btn-primary">Save</button>
+            <div class="col-md-2">
+               <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">Cancel</button>
+            </div>
+          </div> 
         </div>
-        <div class="col-md-4 text-center">
-          <button type="button" name="newToReset" id="newToReset"  class="btn btn-secondary" >Reset</button>
-        </div>
-        <div class="col-md-4 text-center">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        </div>
-        
-       </div> 
-        
       </div>
+        
 
       </form>
 
@@ -197,10 +186,6 @@
     </div>
   </div>
 </div>
-
-
-
-
 
 
 

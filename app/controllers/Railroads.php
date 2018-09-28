@@ -17,10 +17,10 @@ class Railroads extends Controller {
     $data['railroads'] = $this->railRoads->getRailRoadById();
 
     
-    echo "<pre>";
+    /*echo "<pre>";
     print_r($data);
     echo "<pre>";
-    exit();
+    exit();*/
     $this->view('railroads/index', $data);
   }
 
@@ -30,17 +30,21 @@ class Railroads extends Controller {
     $input_data = $_POST;
     $user_id = $_SESSION['user_id'];
     $v = new Valitron\Validator($input_data);
-    $v->rule('required', array('description'))->message('{field} is required');
+    $v->rule('required', array('description', 'railroad'))->message('{field} is required');
    
     $v->labels(array(
-        'description' => 'Description'
+        'description' => 'Description',
+        'railroad' => 'RailRoad'
     ));
     
     if($v->validate()) {
         $data = [
+          'railroad' => $input_data['railroad'],
           'description' => $input_data['description'],
           'status' => $input_data['status'],
+          'business_unit_id' => $_SESSION['user_business_unit_id'],
           'created_by' => $user_id,
+
         ];
       
           if($this->railRoads->CreateRailRoad($data)){
@@ -68,18 +72,21 @@ class Railroads extends Controller {
     $user_id = $_SESSION['user_id'];
     $rid = $input_data['railroad_id'];
     $v = new Valitron\Validator($input_data);
-    $v->rule('required', array('description', 'railroad_id'))->message('{field} is required');
+    $v->rule('required', array('description', 'railroad_id', 'railroad'))->message('{field} is required');
 
     $v->labels(array(
         'description' => 'Description',
-        'railroad_id' => 'Rail Road ID'
+        'railroad_id' => 'Rail Road ID',
+        'railroad' => 'Rail Road'
     ));
     
     if($v->validate()) {
         $data = [
+          'railroad' => $input_data['railroad'],
           'description' => $input_data['description'],
           'status' => $input_data['status'],
-          'created_by' => $user_id,
+          'business_unit_id' => $_SESSION['user_business_unit_id'],
+          'updated_by' => $user_id,
           'railroad_id' => $rid,
         ];
       $this->railRoads->UpdateRailRoad($data);

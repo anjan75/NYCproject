@@ -196,10 +196,10 @@
            <!--  <a class="dropdown-item" href="#">Lines-Location Types</a> -->
             <!-- <a class="dropdown-item" href="#">Location Types-Locations</a> -->
             <!-- <a class="dropdown-item" href="#">Job Codes-Occupation Codes</a> -->
-            <a class="dropdown-item" href="#">Job Codes-Position Number</a>
+            <a class="dropdown-item" href="<?php echo URLROOT; ?>/processroles_jobcodes/index">Process Roles-Job Codes</a>
             <!-- <a class="dropdown-item" href="#">Occupation Codes-Process Roles</a> -->
             <a class="dropdown-item" href="<?php echo URLROOT; ?>/entry_restrictions/index">Observation Date Entry Restrictions</a>
-            <a class="dropdown-item" href="#">Process Roles-Observation Counts</a>
+            <a class="dropdown-item" href="<?php echo URLROOT; ?>/entry_restrictions/index">Process Roles-Observation Counts</a>
             <!-- <a class="dropdown-item" href="<?php echo URLROOT; ?>/timeout/index">System Idle Timedout Time</a> -->
           
             </div>

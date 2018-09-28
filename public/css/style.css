@@ -62,9 +62,12 @@ label{
 	margin-top: 0.4rem;
 }
 .modal-footer{
-	display: inline !important;
+	/*display: inline !important;*/
+	border-top: none;
 }
-
+ .label-right{
+            text-align: right;
+ }
 
 /* New testing officer form */
 .user-roles-right input{
@@ -81,7 +84,13 @@ label{
 .user-roles-left label{
 	margin-right: 30px;
 }
-
+/*.btn-block {
+	width: 80%;
+}*/
+.modal-title{
+	line-height: 1;
+	margin: 0 auto;
+}
 
 
 
@@ -122,6 +131,7 @@ background: #0099ff !important;
 .modal-header {
    background:#0099ff !important;
    color: white;
+   padding: 0.5rem;
 }
 
 #genButtons{
@@ -143,3 +153,4 @@ and (max-device-width:1028px){
 	margin-top: 20px;
 }
 }
+

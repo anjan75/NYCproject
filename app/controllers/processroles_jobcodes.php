@@ -1,6 +1,6 @@
 <?php
 
-class Tasks extends Controller {
+class processroles_jobcodes extends Controller {
 
   public function __construct() {
     if(!isLoggedIn()) {
@@ -18,7 +18,6 @@ class Tasks extends Controller {
 
     //$posts = $this->postModel->getPostsByUserId($id);
 
-    $this->view('tasks/index');
+    $this->view('processroles_jobcodes/index');
   }
 }
-

@@ -6,30 +6,33 @@
     <thead class="thead-dark">
     <tr>
       <th>Modify</th>
+      <th>Rail road</th>
       <th>Description</th>
       <th>Status</th>
-      <th>Delete</th>
+      <!-- <th>Delete</th> -->
     </tr>
     </thead>
     <tbody>
     <?php if(isset($data['railroads']) && is_array($data['railroads']) && count($data['railroads']) > 0){ ?>
-      <?php foreach($data['railroads'] as $loc){ ?>
+      <?php $i=0; ?>
+      <?php for ($i = 0; $i < count($data['railroads']['DESCRIPTION']); $i++){ ?>
       <tr>
         <td class="updateRailRoadModal">
           <a href="#" ><i class="fas fa-pen"></i></a>
-          <input type="hidden" name="railroad_id" class="hidden_railroad_id" value="<?php echo $loc['RAILROAD_ID']; ?>" />
+          <input type="hidden" name="railroad_id" class="hidden_railroad_id" value="<?php echo $data['railroads']['RAILROAD_ID'][$i]; ?>" />
         </td>
-        <td><?php echo $loc['DESCRIPTION']; ?></td>
-        <td>#todo</td>
-        <td><a href="#" class="btnDelete"><i class="far fa-trash-alt"></i></a></td>
-      </tr>
-      <?php } ?>
+        <td><?php echo $data['railroads']['RAILROAD'][$i]; ?></td>
+        <td><?php echo $data['railroads']['DESCRIPTION'][$i]; ?></td>
+        <td><?php echo $data['railroads']['STATUS'][$i]; ?></td>
+<!--         <td><a href="#" class="btnDelete"><i class="far fa-trash-alt"></i></a></td>
+ -->      </tr>
+      <?php  } ?>
     <?php } ?>
   </tbody>
   </table>
 
   <div class="text-center"> 
-        <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#newRailroad" style="margin-top: 10px;" value="Add New Railroad">
+        <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#newRailroad" value="Add New Railroad">
   </div>
 
 </form>
@@ -46,35 +49,56 @@
         </button>
       </div>
       <div class="modal-body">
-       
-          <div class="row">
-             <div class="col-md-12 status_message_div">
-                
-            </div>
-            <div class="col-md-6">
-                <div class="form-group form-inline">
-                  <label class="col-md-6" for="DisplayName">Description</label>
-                  <input class="form-control col-md-6" id="description" name="description" type="text" placeholder="">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group form-inline">
-                  <label for="Status" class="col-md-4">Status</label>
-                  <select name="status" id="status" class="form-control col-md-6">
-                      <option value="CREATED">CREATED</option>
-                      <option value="MODIFIED">MODIFIED</option>
-                      <option value="INACTIVE">INACTIVE</option>
-                  </select>
-                </div>
+            <div class="row">
+            <div class="col-md-12 status_message_div">
             </div>
           </div>
-            
-        
+          <div class="container">
+           <div class="form-group row">
+            <div class="col-md-3 label-right">
+              <label  for="DisplayName">Railroad Short Text</label>
+            </div>
+            <div class="col-md-3">
+              <input class="form-control" id="railroad" name="railroad" type="text" placeholder="">
+            </div>
+            <div class="col-md-2 label-right">
+              
+               <label for="Status">Status</label>
+                 
+            </div>
+            <div class="col-md-3">
+              
+               <select name="status" id="status" class="form-control">
+                      <option value="Created">CREATED</option>
+                      <option value="Modified">MODIFIED</option>
+                      <option value="Inactive">INACTIVE</option>
+                  </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-3 label-right">
+              <label for="DisplayName">Railrod Description</label>
+            </div>
+            <div class="col-md-9">
+               <input class="form-control" id="description" name="description" type="text">
+            </div>
+           </div> 
+        </div>
       </div>
       <div class="modal-footer"> 
-        <button type="submit" name="submit" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-secondary">Reset</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <div class="container">
+          <div class="form-group row">
+            <div class="col-md-2 offset-md-3">
+               <button type="submit" name="submit" class="btn btn-primary btn-sm btn-block">Save</button>
+            </div>
+            <div class="col-md-2">
+               <button type="button" class="btn btn-secondary btn-sm btn-block railroad_reset">Reset</button>
+            </div>
+            <div class="col-md-2">
+               <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">Cancel</button>
+            </div>
+          </div> 
+        </div>
       </div>
       </form>
     </div>
@@ -84,7 +108,7 @@
 
 
 
-<!-- Modal -->
+<!-- Update Modal -->
 <div class="modal fade" id="updateRailroad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -96,35 +120,56 @@
         </button>
       </div>
       <div class="modal-body">
-       
           <div class="row">
-             <div class="col-md-12 status_message_div">
-                
+              <div class="col-md-12 status_message_div">
+              </div>
+          </div>
+          <div class="container">
+           <div class="form-group row">
+            <div class="col-md-3 label-right">
+              <label  for="DisplayName">Railroad Short Text</label>
             </div>
-            <div class="col-md-6">
-                <div class="form-group form-inline">
-                  <label class="col-md-6" for="DisplayName">Description</label>
-                  <input class="form-control col-md-6" id="description" name="description" type="text" placeholder="">
-                </div>
+            <div class="col-md-3">
+              <input class="form-control" id="railroad" name="railroad" type="text" placeholder="">
             </div>
-            <div class="col-md-6">
-                <div class="form-group form-inline">
-                  <label for="Status" class="col-md-4">Status</label>
-                  <select name="status" id="status" class="form-control col-md-6">
-                      <option value="CREATED">CREATED</option>
-                      <option value="MODIFIED">MODIFIED</option>
-                      <option value="INACTIVE">INACTIVE</option>
+            <div class="col-md-2 label-right">
+              
+               <label for="Status">Status</label>
+                 
+            </div>
+            <div class="col-md-4">
+              
+               <select name="status" id="status" class="form-control">
+                      <option value="Created">CREATED</option>
+                      <option value="Modified">MODIFIED</option>
+                      <option value="Inactive">INACTIVE</option>
                   </select>
-                </div>
             </div>
           </div>
-            
-        
+          <div class="form-group row">
+            <div class="col-md-3 label-right">
+              <label for="DisplayName">Railrod Description</label>
+            </div>
+            <div class="col-md-9">
+               <input class="form-control" id="description" name="description" type="text">
+            </div>
+           </div> 
+        </div>   
       </div>
       <div class="modal-footer"> 
-        <button type="submit" name="submit" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-secondary">Reset</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <div class="container">
+          <div class="form-group row">
+            <div class="col-md-2 offset-md-3">
+               <button type="submit" name="submit" class="btn btn-primary btn-sm btn-block">Save</button>
+            </div>
+            <div class="col-md-2">
+               <button type="button" class="btn btn-secondary btn-sm btn-block railroad_reset">Reset</button>
+            </div>
+            <div class="col-md-2">
+               <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">Cancel</button>
+            </div>
+          </div> 
+        </div>
       </div>
       </form>
     </div>

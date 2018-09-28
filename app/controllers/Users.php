@@ -217,6 +217,7 @@ class Users extends Controller {
 		$_SESSION['user_roles'] = $user['roles'];
 		$_SESSION['user_department_id'] = $user['DEPT_ID'];
 		$_SESSION['user_business_unit'] = $user['BUSINESS_UNIT'];
+		$_SESSION['user_business_unit_id'] = $user['BUSINESS_UNIT_ID'];
 
 		redirect('dashboards/index');
 	}
@@ -227,6 +228,9 @@ class Users extends Controller {
 		unset($_SESSION['user_email']);
 		unset($_SESSION['user_name']);
 		unset($_SESSION['user_roles']);
+		unset($_SESSION['user_department_id']);
+		unset($_SESSION['user_business_unit']);
+
 		session_destroy();
 
 		redirect('users/login');

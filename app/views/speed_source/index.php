@@ -6,20 +6,39 @@
     <thead class="thead-dark" >
     <tr>
       <th scope="col" style="width: 15%; text-align: center;">Modify</th>
-      <th scope="col" style="width: 20%; text-align: center;">Display Name</th>
+      <th scope="col" style="width: 20%; text-align: center;">Speed Code</th>
       <th scope="col" style="text-align: center;">Description</th>
       <th scope="col" style="width: 15%; text-align: center;">Status</th>
-      <th scope="col" style="width: 15%; text-align: center;">Delete</th>
+     <!--  <th scope="col" style="width: 15%; text-align: center;">Delete</th> -->
     </tr>
     </thead>
     <tbody>
-    <tr>
+    <!-- <tr>
       <td scope="row"><a href="#" data-toggle="modal" data-target="#AddNewSpeedSource"><i class="fas fa-pen"></i></td>
       <td>Mark</td>
       <td>Otto</td>
       <td>Otto</td>
       <td><a href="#" class="btnDelete"><i class="far fa-trash-alt"></i></a></td>
-    </tr>
+    </tr> -->
+     <tr>
+         <?php if(isset($data['SpeedSource']) && is_array($data['SpeedSource']) && count($data['SpeedSource']) > 0){ ?>
+        <?php $i=0; ?>
+        <?php for ($i = 0; $i < count($data['SpeedSource']['DESCRIPTION']); $i++){ ?>
+        <tr>
+          <td class="updatelineModal">
+            <a href="#" ><i class="fas fa-pen"></i></a>
+            <input type="hidden" name="line_id" class="hidden_line_id" value="<?php echo $data['SpeedSource']['OBS_SPEED_SRC_ID'][$i]; ?>" />
+          </td>
+          <td><?php echo $data['SpeedSource']['SPEED_SOURCE'][$i]; ?></td>
+          <td><?php echo $data['SpeedSource']['DESCRIPTION'][$i]; ?></td>
+          <td>#todo</td>
+         <!--  <td><a href="#" class="btnDelete"><i class="far fa-trash-alt"></i></a></td> -->
+        </tr>
+        <?php  } ?>
+      <?php } ?>
+      </tr>
+
+    
     </tbody>
   </table>
   <div class="text-center"> 
@@ -40,8 +59,8 @@
           <div class="row">
             <div class="col-md-6">
                 <div class="form-group form-inline">
-                  <label class="col-md-7" for="DisplayName">Display Name</label>
-                  <input class="form-control col-md-5" id="DisplayName" type="text" placeholder="">
+                  <label class="col-md-7" for="SpeedCode">Speed Code</label>
+                  <input class="form-control col-md-5" id="SpeedCode" type="text" placeholder="">
                 </div>
             </div>
             <div class="col-md-6">

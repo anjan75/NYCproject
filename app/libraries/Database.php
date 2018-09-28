@@ -102,6 +102,12 @@
 
     // Execute the prepared statement
     public function execute(){
+      /*try{
+        $exec = $this->stmt->execute();
+      }catch(Exception $e){
+        $exec = $e;
+      }
+      return $exec;*/
       return $this->stmt->execute();
     }
 

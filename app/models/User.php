@@ -6,6 +6,8 @@ class User {
 
 	public function __construct() {
 		$this->db = new Database;
+	
+  
 	}
 
 	public function register($data) {
@@ -71,6 +73,14 @@ class User {
 	public function getUsers($inputs = null) {
 		$page = isset($inputs['page']) ? $inputs['page'] : 1;
 		$per_page = isset($inputs['per_page']) ? $inputs['per_page'] : 3;
+		//$sql = sprintf("SELECT * FROM %s ORDER BY %s %s limit %d , %d ", MyTable ,$orderBy,$orderType ,$start , $length);
+
+	     /*for($i=0 ; $i<count($_POST['columns']);$i++){
+	         $column = $_POST['columns'][$i]['data'];//we get the name of each column using its index from POST request
+	         $where[]="$column like '%".$_POST['search']['value']."%'";
+	     }
+	     $where = "WHERE ".implode(" OR " , $where);// id like '%searchValue%' or name like '%searchValue%' ....*/
+     
 		$this->db->query('SELECT *
 						FROM EHOST_INFO 
 						INNER JOIN USER_PLANS
@@ -85,21 +95,20 @@ class User {
 		return $row;
 	} 
 	public function getUserByBSID($id) {
-
-		$this->db->query('SELECT *
+		$this->db->query('SELECT EHOST_INFO.*, DEPARTMENTS.*, BUSINESS_UNIT.*, USER_PLANS.*, EHOST_INFO.BSC_EMPLID as BSC_EMPLID
 						FROM EHOST_INFO 
-						INNER JOIN USER_PLANS
-						ON USER_PLANS.BSC_EMPLID = EHOST_INFO.BSC_EMPLID
-						INNER JOIN DEPARTMENTS
-						ON USER_PLANS.DEPT_ID = DEPARTMENTS.DEPARTMENT_ID
-						INNER JOIN BUSINESS_UNIT
+						LEFT JOIN USER_PLANS
+						ON EHOST_INFO.BSC_EMPLID = USER_PLANS.BSC_EMPLID 
+						LEFT JOIN DEPARTMENTS
+						ON DEPARTMENTS.DEPARTMENT_ID = USER_PLANS.DEPT_ID
+						LEFT JOIN BUSINESS_UNIT
 						ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
 						WHERE EHOST_INFO.BSC_EMPLID = :BSC_EMPLID
 						');
 		$this->db->bind(':BSC_EMPLID', $id);
 
 		$row = $this->db->singleArray();
-		
+		//print_r($row);
 		return $row;
 	} 
 	public function findUserByBSID($id) {
