@@ -31,6 +31,7 @@ td, th {
   border: 1px solid #ccc; 
   text-align: left; 
   vertical-align: middle !important;
+  text-align: center;
 }
 
 thead.thead-dark{

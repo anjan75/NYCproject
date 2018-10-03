@@ -49,10 +49,30 @@ class Line {
 
 	public function getLineById($id='') {
 		
-		$query = 'BEGIN ECR2_PKG.Get_LINES(:LINE_ID, :LINES); END;';
-		$row = $this->db->refcurExecFetchAll($query, "Get line List","LINES", array(array(":LINE_ID", $id, 1)));
+		/*$query = 'BEGIN ECR2_PKG.Get_LINES(:LINE_ID, :LINES); END;';
+		$row = $this->db->refcurExecFetchAll($query, "Get line List","LINES", array(array(":LINE_ID", $id, 1)));*/
+
+
+		$query = 'BEGIN ECR2_PKG.Get_LINES(:LINE_ID,  :START, :END, :LINES); END;';
+		$row = $this->db->refcurExecFetchAll(
+												$query, 
+												"Get Rail Road List",
+												"LINES", 
+												array(
+													[":LINE_ID", $id, 1],
+													[":START", 0, 1],
+													[":END", 30, 2],
+													
+												)
+											);
+
+
+
 		return $row;
 	} 
+
+
+
 
 
 /*	public function getLineByName($name) {

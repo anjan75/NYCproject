@@ -16,8 +16,8 @@ class Lines extends Controller {
    // $data['lines'] = $this->Lines->getLines();
     $data['lines'] = $this->Lines->getLineById();
 
-    
-    /*echo "<pre>";
+  /*  
+    echo "<pre>";
     print_r($data);
     echo "<pre>";
     exit();*/
@@ -33,8 +33,8 @@ class Lines extends Controller {
     $v->rule('required', array('description', 'linecode'))->message('{field} is required');
    
     $v->labels(array(
-      'linecode' => 'Line Code',
-        'description' => 'Description'
+        'linecode' => 'Line Short Text',
+        'description' => 'Line Description'
     ));
     
     if($v->validate()) {
@@ -73,9 +73,9 @@ class Lines extends Controller {
     $v->rule('required', array('description', 'line_id', 'linecode'))->message('{field} is required');
 
     $v->labels(array(
-        'linecode' => 'Line Code',
-        'description' => 'Description',
-        'line_id' => 'Rail Road ID'
+        'linecode' => 'Line Short Text',
+        'description' => 'Line Description',
+        /*'line_id' => 'Rail Road ID'*/
     ));
     
     if($v->validate()) {

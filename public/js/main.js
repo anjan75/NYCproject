@@ -324,8 +324,11 @@ $(document).ready(function(){
 	//$(".newRailroadButton").on("click", function(e){
 		//e.preventDefault();
 		//alert();
+		$('#newRailroadForm #railroad').val('');
 		$('#newRailroadForm #description').val('');
 		$('#newRailroadForm .status_message_div').html('');
+		$('#newRailroadForm #status option[value=Created]').attr('selected','selected');
+		$('#updateRailroadForm .rail_id_hidden').val('');
 		//$('#newRailroad').modal('show'); 
 
 	});
@@ -364,15 +367,36 @@ $(document).ready(function(){
 
 	$(".railroad_reset").on("click", function(e){
 		e.preventDefault();
-		
-		$('#newRailroadForm #railroad').val('');
-		$('#newRailroadForm #description').val('');
-		$('#newRailroadForm .status_message_div').html('');
-		$('#updateRailroadForm #railroad').val('');
-		$('#updateRailroadForm #description').val('');
-		$('#updateRailroadForm .status_message_div').html('');
+		var railroad_id_value = $('#updateRailroadForm .rail_id_hidden').val();
+		//console.log(railroad_id_value);
+		if(railroad_id_value > 0){
+				var railroad = $('table').find('input[value="'+railroad_id_value+'"]').parent().next('td').text();
+				var description = $('table').find('input[value="'+railroad_id_value+'"]').parent().next('td').next('td').text();
+				var status = $('table').find('input[value="'+railroad_id_value+'"]').parent().next('td').next('td').next('td').text();
+				$('#updateRailroadForm #railroad').val(railroad);
+				$('#updateRailroadForm #description').val(description);
+				$('#updateRailroadForm #status').find('option').removeAttr('selected');
+			
+				if(status!=''){
+					$('#updateRailroadForm #status option[value='+status+']').attr('selected','selected');
+					$('#updateRailroadForm #status option[value='+status+']').prop('selected','selected');
+				}
 
+				$('.rail_id_hidden').val(railroad_id_value);
+				$('#updateRailroadForm .status_message_div').html('');
+		}else{
+				$('#newRailroadForm #railroad').val('');
+				$('#newRailroadForm #description').val('');
+				$('#newRailroadForm #status option[value=Created]').attr('selected','selected');
+				$('#newRailroadForm .status_message_div').html('');
+				$('#updateRailroadForm #railroad').val('');
+				$('#updateRailroadForm #description').val('');
+				$('#updateRailroadForm #status option[value=Created]').attr('selected','selected');
+				$('#updateRailroadForm .status_message_div').html('');
+				$('.rail_id_hidden').val('');
+		}
 	});
+
 	$(".updateRailRoadModal").on("click", function(e){
 		e.preventDefault();
 		$('#updateRailroadForm .status_message_div').html('');
@@ -380,11 +404,18 @@ $(document).ready(function(){
 		var railroad_id = $(this).find('.hidden_railroad_id').val();
 		var railroad = $(this).next().text();
 		var description = $(this).next().next().text();
-		var html = ' <input type="hidden" name="railroad_id" value="'+railroad_id+'" />';
+		var status = $(this).next().next().next().text();
+		//var html = ' <input type="hidden" name="railroad_id" value="'+railroad_id+'" />';
 
 		$('#updateRailroadForm #railroad').val(railroad);
 		$('#updateRailroadForm #description').val(description);
-		$('#updateRailroadForm').append(html);
+		$('#updateRailroadForm #status').find('option').removeAttr('selected');
+			
+				if(status!=''){
+					$('#updateRailroadForm #status option[value='+status+']').attr('selected','selected');
+					$('#updateRailroadForm #status option[value='+status+']').prop('selected','selected');
+				}
+		$('#updateRailroadForm .rail_id_hidden').val(railroad_id);
 		
 		//var bscid = $(this).next().html();
 		$('#updateRailroad').modal('show');
@@ -544,12 +575,13 @@ $(document).ready(function(){
 				            url: base_url+'/user_data/getUsers',
 				            type: 'POST'
 				        },
+				        "order": [[ 1, "desc" ]],
 				        "columns": [
 				            { "data": "MODIFY" },
 				            { "data": "BSC_EMPLID" },
 				            { "data": "FIRST_NAME" },
 				            { "data": "BUSINESS_UNIT" },
-				            { "data": "DEPARTMENT_ID" },
+				            { "data": "DEPTID" },
 				            { "data": "JOBCODE" },
 				            { "data": "JOBCODE_DESCR" },
 				            { "data": "POSITION_NUMBER" },
@@ -586,7 +618,8 @@ $('#newLineModal').on('show.bs.modal', function () {
 		$('#newLineForm #linecode').val('');
 		$('#newLineForm #description').val('');
 		$('#newLineForm .status_message_div').html('');
-		
+		$('#updateLineForm #status option[value=Created]').attr('selected','selected');
+		$('#updateLineForm .line_id_hidden').val('');
 		//$('#updateLineForm #linecode').val('');
 		//$('#updateLineForm #description').val('');
 		//$('#updateLineForm .status_message_div').html('');
@@ -628,24 +661,55 @@ $('#newLineModal').on('show.bs.modal', function () {
 		$('form#updateLineForm .description').val();
 		var linecode = $(this).next().text();
 		var description = $(this).next().next().text();
-		var html = ' <input type="hidden" name="line_id" value="'+line_id+'" />';
+		var status = $(this).next().next().next().text();
+
+		//var html = ' <input type="hidden" class="line_id_hidden" name="line_id" value="'+line_id+'" />';
 
 		$('#updateLineForm #linecode').val(linecode);
 		$('#updateLineForm #description').val(description);
-		$('#updateLineForm').append(html);
+		
+
+		$('#updateLineForm #status').find('option').removeAttr('selected');
+			
+				if(status!=''){
+					$('#updateLineForm #status option[value='+status+']').attr('selected','selected');
+					$('#updateLineForm #status option[value='+status+']').prop('selected','selected');
+				}
+
+		$('.line_id_hidden').val(line_id);
 		$('#updateLineForm .status_message_div').html('');
 		//var bscid = $(this).next().html();
 		$('#updatelineModal').modal('show');
 	});
 
 	$('.line_reset').on('click', function(){
+var line_id_value = $('.line_id_hidden').val();
+if(line_id_value!=''){
+var linecode = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').text();
+		var description = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').next('td').text();
+		var status = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').next('td').next('td').text();
+		$('#updateLineForm #linecode').val(linecode);
+		$('#updateLineForm #description').val(description);
+		$('#updateLineForm #status').find('option').removeAttr('selected');
+			
+				if(status!=''){
+					$('#updateLineForm #status option[value='+status+']').attr('selected','selected');
+					$('#updateLineForm #status option[value='+status+']').prop('selected','selected');
+				}
+
+		$('.line_id_hidden').val(line_id_value);
+		$('#updateLineForm .status_message_div').html('');
+}else{
 		$('#newLineForm #linecode').val('');
 		$('#newLineForm #description').val('');
 		$('#newLineForm .status_message_div').html('');
+		$('#newLineForm #status option[value=Created]').attr('selected','selected');
 		$('#updateLineForm #linecode').val('');
 		$('#updateLineForm #description').val('');
+		$('#updateLineForm .line_id_hidden').val('');
 		$('#updateLineForm .status_message_div').html('');
-	});
+
+		}	});
 	/***
 	UPDATE Location type
 	***/

@@ -6,10 +6,9 @@
     <thead class="thead-dark">
     <tr>
       <th>Modify</th>
-      <th>Rail road</th>
-      <th>Description</th>
+      <th>Railroad Short Text</th>
+      <th>Railroad Description</th>
       <th>Status</th>
-      <!-- <th>Delete</th> -->
     </tr>
     </thead>
     <tbody>
@@ -23,9 +22,8 @@
         </td>
         <td><?php echo $data['railroads']['RAILROAD'][$i]; ?></td>
         <td><?php echo $data['railroads']['DESCRIPTION'][$i]; ?></td>
-        <td><?php echo $data['railroads']['STATUS'][$i]; ?></td>
-<!--         <td><a href="#" class="btnDelete"><i class="far fa-trash-alt"></i></a></td>
- -->      </tr>
+        <td><?php echo $data['railroads']['SDESCR'][$i]; ?></td>
+      </tr>
       <?php  } ?>
     <?php } ?>
   </tbody>
@@ -92,10 +90,10 @@
                <button type="submit" name="submit" class="btn btn-primary btn-sm btn-block">Save</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block railroad_reset">Reset</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block railroad_reset">Reset</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">Cancel</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block" data-dismiss="modal">Cancel</button>
             </div>
           </div> 
         </div>
@@ -163,11 +161,12 @@
                <button type="submit" name="submit" class="btn btn-primary btn-sm btn-block">Save</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block railroad_reset">Reset</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block railroad_reset">Reset</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">Cancel</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block" data-dismiss="modal">Cancel</button>
             </div>
+            <input type="hidden" class="rail_id_hidden" name="railroad_id">
           </div> 
         </div>
       </div>

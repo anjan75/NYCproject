@@ -38,6 +38,9 @@ class RailRoad {
 		$query = 'BEGIN ECR2_PKG.Update_Railroad(:RAILROAD_ID, :RAILROAD, :DESCRIPTION, :BUSINESS_UNIT_ID, :UPDATED_BY, :UPDATE_DATE, :STATUS); END;';
 		$this->db->query($query);
 
+
+
+		/*$this->db->bind(':')*/
 		$this->db->bind(':RAILROAD_ID', $data['railroad_id']);
 		$this->db->bind(':RAILROAD', $data['railroad']);
 		$this->db->bind(':DESCRIPTION', $data['description']);
@@ -60,8 +63,20 @@ class RailRoad {
 		//$data = '';
 		//$this->db->query('BEGIN ECR2_PKG.Get_Railroad(:RAILROAD_ID); END;');
 
-		$query = 'BEGIN ECR2_PKG.Get_Railroad(:RAILROAD_ID, :RAILROAD); END;';
-		$row = $this->db->refcurExecFetchAll($query, "Get Rail Road List","RAILROAD", array(array(":RAILROAD_ID", $id, 1)));
+		$query = 'BEGIN ECR2_PKG.Get_Railroad(:RAILROAD_ID, :START, :END, :RAILROAD); END;';
+		/*$row = $this->db->refcurExecFetchAll($query, "Get Rail Road List","RAILROAD", array(array(":RAILROAD_ID", $id, 1)));*/
+
+		$row = $this->db->refcurExecFetchAll(
+												$query, 
+												"Get Rail Road List",
+												"RAILROAD", 
+												array(
+													[":RAILROAD_ID", $id, 1],
+													[":START", 0, 1],
+													[":END", 30, 2],
+													
+												)
+											);
 
 		/*$this->db->bind(':RAILROAD_ID', $id, PDO::PARAM_INT);
 		$this->db->bind(':RAILROAD', $data);*/

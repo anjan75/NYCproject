@@ -134,18 +134,19 @@
                   </div>
                   <div class="col-md-10">
                     <div class="col-md-12">
-                      <div class="col-md-6" style="float:left; margin-left: -14%;">
+                       <div class="row">
+                         <div class="col-md-6" style="right: 20px">
                          <div class="form-check">
-                             <label class="form-check-label col-md-9" for="exampleRadios1">Compliant</label>
-                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios1" type="radio" checked="" value="option1">
+                             <label class="form-check-label col-md-9" for="exampleRadios2">Compliant</label>
+                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios2" type="radio" checked="" value="option1">
                           </div>
                            <div class="form-check">
-                             <label class="form-check-label col-md-9" for="exampleRadios1">Non-Compliant</label>
-                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios1"  type="radio" checked="" value="option1">
+                             <label class="form-check-label col-md-9" for="exampleRadios3">Non-Compliant</label>
+                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios3"  type="radio" checked="" value="option1">
                           </div> 
                           <div class="form-check">
-                             <label class="form-check-label col-md-9" for="exampleRadios1">Observed</label>
-                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios1" type="radio" checked="" value="option1">
+                             <label class="form-check-label col-md-9" for="exampleRadios4">Observed</label>
+                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios4" type="radio" checked="" value="option1">
                           </div>
                           
                         <!-- <p>Compliant<input type="radio" name="exampleRadios" class="form-check-input" id="exampleRadios1" </p> -->
@@ -154,17 +155,20 @@
                              <input name="exampleRadios" class="form-check-input" id="exampleRadios1" style="margin-left: 38px;" type="radio" checked="" value="option1">
                           </div> -->
                      </div>
-                     <div class="col-md-6" style="float:left;margin-left: -14%">
+                     <div class="col-md-6" style="right: 20px">
 
                          <div class="form-check">
-                             <label class="form-check-label col-md-9" for="exampleRadios1">Reviewed/Reinstructed</label>
-                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios1" type="radio" checked="" value="option1">
+                             <label class="form-check-label col-md-9" for="exampleRadios5">Reviewed/Reinstructed</label>
+                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios5" type="radio" checked="" value="option1">
                           </div>
                           <div class="form-check">
-                             <label class="form-check-label col-md-9" for="exampleRadios1">Failed/Discused</label>
-                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios1" type="radio" checked="" value="option1">
+                             <label class="form-check-label col-md-9" for="exampleRadios6">Failed/Discused</label>
+                             <input name="exampleRadios" class="form-check-input col-md-3" id="exampleRadios6" type="radio" checked="" value="option1">
                           </div>
                      </div>
+
+                       </div>
+                      
                   <!-- <div class="col-md-12">
                     <div class="form-check">
                       <label class="form-check-label" for="exampleRadios2">Non-Compliant</label>

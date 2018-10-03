@@ -17,7 +17,7 @@ class Railroads extends Controller {
     $data['railroads'] = $this->railRoads->getRailRoadById();
 
     
-    /*echo "<pre>";
+/*    echo "<pre>";
     print_r($data);
     echo "<pre>";
     exit();*/
@@ -30,11 +30,16 @@ class Railroads extends Controller {
     $input_data = $_POST;
     $user_id = $_SESSION['user_id'];
     $v = new Valitron\Validator($input_data);
-    $v->rule('required', array('description', 'railroad'))->message('{field} is required');
+    $v->rule('required', array('railroad','description'))->message('{field} is required');
    
     $v->labels(array(
-        'description' => 'Description',
-        'railroad' => 'RailRoad'
+      'railroad' => 'Railroad Short Text',
+      'description' => 'Railroad Description'
+        
+
+         /*'description' => 'Railroad Description',
+        'railroad_id' => 'Railroad Short Text',
+        'railroad' => 'Railroad'*/
     ));
     
     if($v->validate()) {
@@ -72,12 +77,13 @@ class Railroads extends Controller {
     $user_id = $_SESSION['user_id'];
     $rid = $input_data['railroad_id'];
     $v = new Valitron\Validator($input_data);
-    $v->rule('required', array('description', 'railroad_id', 'railroad'))->message('{field} is required');
+    $v->rule('required', array('railroad','description', 'railroad_id'))->message('{field} is required');
 
     $v->labels(array(
-        'description' => 'Description',
-        'railroad_id' => 'Rail Road ID',
-        'railroad' => 'Rail Road'
+      'railroad' => 'Railroad Short Text',
+        'description' => 'Railroad Description',
+        'railroad_id' => 'Railroad ID',
+        /*'railroad' => 'Railroad'*/
     ));
     
     if($v->validate()) {

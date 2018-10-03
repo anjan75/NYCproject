@@ -73,27 +73,57 @@ class User {
 	public function getUsers($inputs = null) {
 		$page = isset($inputs['page']) ? $inputs['page'] : 1;
 		$per_page = isset($inputs['per_page']) ? $inputs['per_page'] : 3;
-		//$sql = sprintf("SELECT * FROM %s ORDER BY %s %s limit %d , %d ", MyTable ,$orderBy,$orderType ,$start , $length);
+		$table = 'EHOST_INFO';
+	    $orderBy = isset($inputs['orderBy']) ? $inputs['orderBy'] : $table.'.BSC_EMPLID';
+	    $orderType = isset($inputs['orderType']) ? $inputs['orderType'] : 'DESC';
+	    $start  = isset($inputs['start']) ? $inputs['start'] : 1;
+	    $length = isset($inputs['length']) ? $inputs['length'] : 5;
+	    $columns  = isset($inputs['columns']) ? $inputs['columns'] : null;
+	    $search  = isset($inputs['search']) ? $inputs['search'] : null;
+	    $searchValue = '%'.$search['value'].'%';
+	    $where = null;
+		$query = 'SELECT *
+				FROM MDS_INFO
+				INNER JOIN USER_PLANS
+				ON USER_PLANS.BSC_EMPLID = MDS_INFO.BSC_EMPLID
+				INNER JOIN DEPARTMENTS
+				ON USER_PLANS.DEPT_ID = DEPARTMENTS.DEPARTMENT_ID
+				INNER JOIN BUSINESS_UNIT
+				ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
+				';
+	    if (!empty($search['value'])) {
+	        $where[] = " MDS_INFO.BSC_EMPLID LIKE :SEARCH_VALUE ";
+	        $where[] = " MDS_INFO.FIRST_NAME LIKE :SEARCH_VALUE ";
+	        $where[] = " USER_PLANS.BUSINESS_UNIT_ID LIKE :SEARCH_VALUE ";
+	        $where[] = " USER_PLANS.DEPT_ID LIKE :SEARCH_VALUE ";
+	        $where[] = " MDS_INFO.JOBCODE LIKE :SEARCH_VALUE ";
+	        $where[] = " MDS_INFO.JOBCODE_DESCR LIKE :SEARCH_VALUE ";
+	        $where[] = " MDS_INFO.POSITION_NBR LIKE :SEARCH_VALUE ";
+	        $where[] = " MDS_INFO.POSNUM_DESCR LIKE :SEARCH_VALUE ";
+	        //$where[] = " MDS_INFO.POSITION_ROLE LIKE :SEARCH_VALUE ";
+	        //$where[] = " MDS_INFO.STATUS LIKE :SEARCH_VALUE ";
+	       $query .= " WHERE ".implode(" OR " , $where);
+	    }
+	    
+	    // #TODO check orderBy column table 
+	    $query .= ' ORDER BY MDS_INFO.'.$orderBy.' '.$orderType;
+	    $count_query = $query;
+	    $query .= ' OFFSET '.$start.' ROWS FETCH NEXT '.$length.' ROWS ONLY';
+		
+	/*	echo $query;
+		exit();*/
+		$this->db->query($query);
+		$this->db->bind(':SEARCH_VALUE', $searchValue);
+		$row['rows'] = $this->db->resultArraySet();
 
-	     /*for($i=0 ; $i<count($_POST['columns']);$i++){
-	         $column = $_POST['columns'][$i]['data'];//we get the name of each column using its index from POST request
-	         $where[]="$column like '%".$_POST['search']['value']."%'";
-	     }
-	     $where = "WHERE ".implode(" OR " , $where);// id like '%searchValue%' or name like '%searchValue%' ....*/
-     
-		$this->db->query('SELECT *
-						FROM EHOST_INFO 
-						INNER JOIN USER_PLANS
-						ON USER_PLANS.BSC_EMPLID = EHOST_INFO.BSC_EMPLID
-						INNER JOIN DEPARTMENTS
-						ON USER_PLANS.DEPT_ID = DEPARTMENTS.DEPARTMENT_ID
-						INNER JOIN BUSINESS_UNIT
-						ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
-						');
+		$this->db->query($count_query); // TODO select only bscid 
+		$this->db->bind(':SEARCH_VALUE', $searchValue);
+		$toal_rows = $this->db->resultArraySet();
+		$row['total_rows'] = count($toal_rows);
 
-		$row = $this->db->resultArraySet();
 		return $row;
 	} 
+
 	public function getUserByBSID($id) {
 		$this->db->query('SELECT EHOST_INFO.*, DEPARTMENTS.*, BUSINESS_UNIT.*, USER_PLANS.*, EHOST_INFO.BSC_EMPLID as BSC_EMPLID
 						FROM EHOST_INFO 

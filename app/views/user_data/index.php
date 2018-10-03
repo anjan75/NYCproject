@@ -9,10 +9,15 @@
           <input type="" class="col-md-8 form-control" id="" name="">
        </div>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <div class="form-group form-inline">
+       <label class="col-md-4">Status</label>
+        <input type="" class="col-md-5 form-control" id="" name="">
+           </div>
+    </div>
     <div class="col-md-3 text-right">
-         <button id="" name="" class="ml-auto btn btn-primary" style="width:40%;margin: 0% 2% 0% 2%;">Filter</button>  
-        <button id="" name="" class="ml-auto btn btn-primary" style="width:40%;margin: 0% 2% 0% 2%;">Clear</button>
+        <button type="button" class="ml-auto btn btn-primary" style="width:40%;margin: 0% 2% 0% 2%;">Filter</button>  
+        <button type="button" class="ml-auto btn btn-primary" style="width:40%;margin: 0% 2% 0% 2%;">Clear</button>
     </div>
   </div>
   <hr />

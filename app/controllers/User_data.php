@@ -27,8 +27,11 @@ class User_data extends Controller {
     $input_data['orderType'] = $_POST['order'][0]['dir']; // ASC or DESC
     $input_data['start']  = $_POST["start"];//Paging first record indicator.
     $input_data['length'] = $_POST['length'];
+    $input_data['columns'] = isset($_POST['columns']) ? $_POST['columns'] : null;
+    $input_data['search']  = isset($_POST['search']) ? $_POST['search'] : null;
 
-    $users = $this->userModel->getUsers($input_data);
+    $return_data = $this->userModel->getUsers($input_data);
+    $users = $return_data['rows'];
     foreach ($users as $ukey => $user) {
       $roles = $this->userModel->getUserRoles($user['BSC_EMPLID']);
       $role_str = "";
@@ -46,8 +49,8 @@ class User_data extends Controller {
       $users[$ukey]['ROLES'] = $role_str;
     }
 
-    $recordsTotal = count($users);
-    $recordsFiltered = count($users);
+    $recordsTotal = $return_data['total_rows'];
+    $recordsFiltered = $return_data['total_rows'];
     $response = array(
         "draw" => intval($input_data['draw']),
         "recordsTotal" => $recordsTotal,
@@ -62,10 +65,10 @@ class User_data extends Controller {
     $input_data = $_POST;
     $v = new Valitron\Validator($input_data);
     $v->rule('required', array('bscid', 'name', ))->message('{field} is required');
-    $v->rule('length', 'bscid', '7')->message('{field} must be 7 digits length');
+    /*$v->rule('length', 'bscid', '7')->message('{field} must be 7 digits length');*/
     $v->labels(array(
-        'name' => 'Employee Name',
-        'bscid' => 'BSCID'
+        /*'name' => 'Employee Name',*/
+        'bscid' => 'BSC ID'
     ));
     
     if($v->validate()) {

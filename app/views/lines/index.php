@@ -5,14 +5,14 @@
   <table class="table table-bordered table-striped table-sm line-administration">
     <thead class="thead-dark" >
     <tr>
-      <th scope="col" style="width: 10%; text-align: center;">Modify</th>
+    <!--   <th scope="col" style="width: 10%; text-align: center;">Modify</th>
       <th scope="col" style="width: 25%; text-align: center;">Line Short Text</th>
       <th scope="col" style="text-align: center;">Line Description</th>
-      <th scope="col" style="width: 10%; text-align: center;">Status</th>
-      <!-- <th scope="col" style="text-align: center;">Modify</th>
+      <th scope="col" style="width: 10%; text-align: center;">Status</th> -->
+      <th scope="col" style="text-align: center;">Modify</th>
       <th scope="col" style="text-align: center;">Line Short Text</th>
       <th scope="col" style="text-align: center;">Line Description</th>
-      <th scope="col" style="text-align: center;">Status</th> -->
+      <th scope="col" style="text-align: center;">Status</th>
     </tr>
     </thead>
     <tbody>
@@ -27,7 +27,7 @@
           </td>
           <td><?php echo $data['lines']['LINE_CODE'][$i]; ?></td>
           <td><?php echo $data['lines']['DESCRIPTION'][$i]; ?></td>
-          <td><?php echo $data['lines']['STATUS'][$i]; ?></td>
+          <td><?php echo $data['lines']['SDESCR'][$i]; ?></td>
         </tr>
         <?php  } ?>
       <?php } ?>
@@ -95,10 +95,10 @@
                <button type="submit" name="submit" class="btn btn-primary btn-sm btn-block">Save</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block line_reset">Reset</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block line_reset">Reset</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">Cancel</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block" data-dismiss="modal">Cancel</button>
             </div>
           </div> 
         </div>
@@ -126,7 +126,7 @@
           <div class="container">
            <div class="form-group row">
             <div class="col-md-3 label-right">
-              <label for="LineCode">Line Code</label>
+              <label for="LineCode">Line Short Text</label>
             </div>
             <div class="col-md-3">
               <input class="form-control" name="linecode" id="linecode" type="text" placeholder="">
@@ -163,11 +163,12 @@
                <button type="submit" name="submit" class="btn btn-primary btn-sm btn-block">Save</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block line_reset">Reset</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block line_reset">Reset</button>
             </div>
             <div class="col-md-2">
-               <button type="button" class="btn btn-secondary btn-sm btn-block" data-dismiss="modal">Cancel</button>
+               <button type="button" class="btn btn-primary btn-sm btn-block" data-dismiss="modal">Cancel</button>
             </div>
+            <input type="hidden" class="line_id_hidden" name="line_id">
           </div> 
         </div>
       </div>
