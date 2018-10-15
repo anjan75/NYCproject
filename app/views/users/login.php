@@ -23,10 +23,14 @@
   				</div>
 
   				<div class="row">
-  					<div class="col">
+
+            <div class="col-md-4">
+               </div>
+
+  					<div class="col-md-4">
   						<input type="submit" value="login" class="btn btn-success btn-block">
   					</div>
-  					<div class="col">
+  					<div class="col-md-4">
   						<a href="<?php echo URLROOT; ?>/users/register" class="btn btn-light btn-block">Forgot Password</a>
   					</div>
   				</div>

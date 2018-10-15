@@ -32,12 +32,6 @@ $(document).ready(function(){
 	}); 
 
 
-
-
-	
-
-	
-	
 	
 	/***
 	BSC ID USER INFORMATION
@@ -50,11 +44,18 @@ $(document).ready(function(){
 			$('#newTestingOfficerModal #name').val("");
 			$('#newTestingOfficerModal #department').val("");
 			$('#newTestingOfficerModal #business_unit').val("");
-			$('#newTestingOfficerModal #status_validity').val("");
+			$('#newTestingOfficerModal #management_center_id').val("");
+			$('#newTestingOfficerModal #jobcode').val("");
+			$('#newTestingOfficerModal #position_number').val('');
+			//$('#newTestingOfficerModal #status_validity').val("");
 			$('#newTestingOfficerModal #status').val("");
 			$('#newTestingOfficerModal input:radio').prop('checked', false);
 			$('#newTestingOfficerModal input:checkbox').prop('checked', false);
+			$('input[name="me_no_roles[]"], input[name="me_yes_roles[]"]').removeAttr('disabled');
 			$('.status_message_div').html('');
+			
+			
+
 
 			if (bscid.length < 7) {
 				return false;
@@ -72,13 +73,17 @@ $(document).ready(function(){
 
 					var data = JSON.parse(data);
 					var user = data.data;
-					//console.log(user);
+					console.log(user);
 					if (user.BSC_EMPLID > 0) {
 						$('#newTestingOfficerModal #name').val(user.FIRST_NAME+" "+user.LAST_NAME);
 						$('#newTestingOfficerModal #department').val(user.DEPTID);
 						$('#newTestingOfficerModal #business_unit').val(user.BUSINESS_UNIT);
+						$('#newTestingOfficerModal #management_center_id').val(user.DEPTID);
+						$('#newTestingOfficerModal #jobcode').val(user.JOBCODE);
+						$('#newTestingOfficerModal #position_number').val(user.POSITION_NBR);
 						$('#newTestingOfficerModal #status_validity').val(user.STATUS_VALIDITY);
 						$('#newTestingOfficerModal #status').val(user.STATUS);
+
 						//$('#newTestingOfficerModal #bscid, #newTestingOfficerModal #name').attr('disabled', true);
 						var roles = user.roles;
 
@@ -87,13 +92,17 @@ $(document).ready(function(){
 							var no_id = '#me_no_role_'+role.ROLE_ID;
 							if (role.MUTUALLY_EXCLUSIVE == 'Y') {
 								$(yes_id).prop("checked", true);
+								$('input[name="me_yes_roles[]"]').change();
+
 							}else if(role.MUTUALLY_EXCLUSIVE == 'N') {
 								$(no_id).prop("checked", true);
+								$('input[name="me_no_roles[]"]').change();
 							}
 						});
 						
 
-
+						$('#status_validity').change();
+						$('#newTestingOfficerModal #end_date').val(user.END_DATE);
 					}else{
 						var error_data = '<div class="alert alert-danger">';
 						error_data +=	'<ul class="list-group">';
@@ -107,11 +116,14 @@ $(document).ready(function(){
 						$('#newTestingOfficerModal #name').val("");
 						$('#newTestingOfficerModal #department').val("");
 						$('#newTestingOfficerModal #business_unit').val("");
-
+						$('#newTestingOfficerModal #management_center_id').val("");
+						$('#newTestingOfficerModal #jobcode').val("");
+						$('#newTestingOfficerModal #position_number').val('');
 						$('#newTestingOfficerModal #status_validity').val("");
 						$('#newTestingOfficerModal #status').val("");
 						$('#newTestingOfficerModal input:radio').prop('checked', false);
 						$('#newTestingOfficerModal input:checkbox').prop('checked', false);
+
 					}
 
 				},
@@ -125,8 +137,50 @@ $(document).ready(function(){
 	/***
 	GET USER ROLES 
 	***/
+	$(document).on('click', '#newTestingOfficerButton', function(e){
+		e.preventDefault();
+		$('#updateToHidden').val('');
+	})
+	/*$(document).on('click', '.date', function (e){
+		e.preventDefault();
+		$(this).datepicker({
+			minDate: 0
+		});
+	});*/
+
+	$(document).delegate(".date", "focusin", function () {
+		$(this).datepicker({
+			beforeShow:function(textbox, instance){
+		     	$('.date').parent().append($('#ui-datepicker-div'));
+		   	},
+		   	afterShow:function(textbox, instance){
+		   		//$('#ui-datepicker-div').css({'top': '0'});
+		   	}
+
+		});
+	});
+	 
+	 
 	$('#newTestingOfficerModal').on('show.bs.modal', function () {
 			resetTestingOfficerForm();
+			//$('#newTestingOfficerModal #bscid, #newTestingOfficerModal #name').removeAttr('disabled');
+			
+			$('#newTestingOfficerModal #bscid, #newTestingOfficerModal #name').val("").removeAttr('readonly').removeAttr('onfocus');
+			$('#newTestingOfficerModal #department').val("");
+			$('#newTestingOfficerModal #business_unit').val("");
+			$('#newTestingOfficerModal #management_center_id').val("");
+			$('#newTestingOfficerModal #jobcode').val("");
+			$('#newTestingOfficerModal #position_number').val("");
+			$('#newTestingOfficerModal #status_validity').val("");
+			$('#newTestingOfficerModal #status').val("");
+			var updateToHidden = $('#updateToHidden').val();
+
+			// new TO form 
+			if (updateToHidden != 1) {
+				$('#newTestingOfficerModal #bscid, #newTestingOfficerModal #name').removeAttr('readonly').removeAttr('onfocus');
+			}
+			$('#newToReset').click();
+			
 
   			$.ajax({
 				type: 'GET',
@@ -154,6 +208,7 @@ $(document).ready(function(){
 					});
 					$('.me-yes').html(me_yes);
 					$('.me-no').html(me_no);
+					$('#status_validity').change();
 				},
 				error: function(e){
 					console.log(e);
@@ -161,20 +216,75 @@ $(document).ready(function(){
 			})
 	});
 	
-	$(document).on('change', 'input[name="me_yes_roles[]"]', function(){
-		//alert();
+	/*
+	Left Side Check Boxes - Data Entry For Self,Data Entry For Others Only,Designated Instructor,Qualified Personnel
+	**/
+	$('.me-yes').on('change', 'input[name="me_yes_roles[]"]', function(){
+		$('input[name="me_no_roles[]"], input[name="me_yes_roles[]"]').removeAttr('disabled');
+
 		let me_yes_roles_checked = [];
+		$('input[name="me_yes_roles[]"]').attr('disabled', 'disabled');
+
 		$('input[name="me_yes_roles[]"]:checked').each(function(){
 			me_yes_roles_checked.push(this.value);
+			$(this).removeAttr('disabled');
 		});
 		
 		if(me_yes_roles_checked.length > 0){
-			console.log(me_yes_roles_checked);
 
+			$('input[name="me_no_roles[]"]').prop("checked", false);
 			$('input[name="me_no_roles[]"]').attr('disabled', 'disabled');
 		}else{
-			console.log('nothing selected');
-			$('input[name="me_no_roles[]"]').removeAttr('disabled');
+			$('input[name="me_yes_roles[]"]').removeAttr('disabled');
+		}
+	});
+
+
+	/**
+	Right Side Check Boxes - Rules Administrator, View Reports etc....
+	**/
+	$(document).on('change', 'input[name="me_no_roles[]"]', function(){
+		$('input[name="me_no_roles[]"], input[name="me_yes_roles[]"]').removeAttr('disabled');
+		let me_no_roles_checked = [];
+		me_no_roles_checked = $('input[name="me_no_roles[]"]:checked');
+		if(me_no_roles_checked.length > 0){
+
+			$('input[name="me_yes_roles[]"]').prop("checked", false);
+			$('input[name="me_yes_roles[]"]').attr('disabled', 'disabled');
+		}
+
+	});
+
+	/**
+	status validity expire Date validation
+	**/
+	$(document).on('change', '#status_validity', function(){
+		let status_validity = $('#status_validity option:selected').val();
+		let tatus_validity_div = '';
+		if (status_validity == 'EFFECTIVE UNTILL') {
+			
+			/*status_validity_div = ''+
+							'<label for="status validity end date" class="col-md-5 status_validity_end_date">End Date</label>'+
+							'<input type="text" name="end_date" id="end_date" class="form-control col-md-7 status_validity_end_date" placeholder="yyyy/m/d"/>'+
+							'';
+			$(this).parent().parent().siblings().find('.form-group').html(status_validity_div);*/
+			$('#newTestingOfficerModal #management_center_id').removeAttr('disabled').removeAttr('readonly');
+			$('#newTestingOfficerModal #jobcode').removeAttr('disabled').removeAttr('readonly');
+			$('#newTestingOfficerModal #position_number').removeAttr('disabled').removeAttr('readonly');
+			$('.status_validity_end_date').show();
+			
+		}else if(status_validity == 'NEVER EXPIRE'){
+			
+			$('#newTestingOfficerModal #management_center_id').removeAttr('disabled').removeAttr('readonly');
+			$('#newTestingOfficerModal #jobcode').removeAttr('disabled').removeAttr('readonly');
+			$('#newTestingOfficerModal #position_number').removeAttr('disabled').removeAttr('readonly');
+			$('.status_validity_end_date').hide();
+			
+		}else{
+			$('#newTestingOfficerModal #management_center_id').attr('disabled', 'disabled').attr('readonly', 'readonly');
+			$('#newTestingOfficerModal #jobcode').attr('disabled', 'disabled').attr('readonly', 'readonly');
+			$('#newTestingOfficerModal #position_number').attr('disabled', 'disabled').attr('readonly', 'readonly');
+			$('.status_validity_end_date').hide();
 		}
 	});
 
@@ -209,7 +319,25 @@ $(document).ready(function(){
 
 	$("#newToReset").on("click", function(e){
 		e.preventDefault();
-		resetTestingOfficerForm();
+		var updateToHidden = $('#updateToHidden').val();
+
+		// new TO form 
+		if (updateToHidden != 1) {
+			$('#newTestingOfficerModal #bscid, #newTestingOfficerModal #name').removeAttr('readonly').removeAttr('onfocus');
+		}
+
+		// update TO
+		//resetTestingOfficerForm();
+		let bscid = $('#newTestingOfficerModal #bscid').val();
+		$('#newTestingOfficerModal #bscid').val(bscid).keyup();
+
+	});
+
+
+	$(document).on('click', '.f_reset', function(){
+		var form = $(this).closest('form');
+		$(form).find('input[type=text]').val('');
+		window.location.href = base_url+'/user_data/index';
 	});
 	
 	/*$(document).on('keyup keypress', 'form input[type="text"]', function(e) {
@@ -222,15 +350,20 @@ $(document).ready(function(){
 	$(".updateTestingOfficerModal").on("click", function(e){
 		e.preventDefault();
 		var bscid = $(this).next().html();
+		var attribues = {'readonly': 'readonly', 'onfocus': 'this.blur()'};
+
 		$('#newTestingOfficerModal').modal('show');
-		$('#newTestingOfficerModal #bscid').val(bscid).attr('disabled', 'disabled').keyup();
-		$('#newTestingOfficerModal #name').attr('disabled', 'disabled');
+		
+		$('#newTestingOfficerModal #bscid').val(bscid).attr(attribues).keyup();
+		$('#newTestingOfficerModal #name').attr(attribues);
+		$('#newTestingOfficerModal #updateToHiddenSpan').html('<input type="hidden" name="updateToHidden" id="updateToHidden" value="1" />');
 	});
 
 
-	/***
-	ADD NEW Location type
-	***/
+
+/***
+ADD NEW Location type
+***/
 
 
 	$('#newLocationTypeModal').on('show.bs.modal', function () {
@@ -289,9 +422,10 @@ $(document).ready(function(){
 		$('#updateLocationTypeForm #name').val('');
 		$('#updateLocationTypeForm #description').val('');
 	});
-	/***
-	UPDATE Location type
-	***/
+
+/***
+UPDATE Location type
+***/
 	$("form#updateLocationTypeForm").on("submit", function(e){
 		$('#updateLocationTypeForm .status_message_div').html('Processing.....');
 		e.preventDefault();
@@ -327,15 +461,17 @@ $(document).ready(function(){
 		$('#newRailroadForm #railroad').val('');
 		$('#newRailroadForm #description').val('');
 		$('#newRailroadForm .status_message_div').html('');
-		$('#newRailroadForm #status option[value=Created]').attr('selected','selected');
+		
+		$('#newRailroadForm #status').removeAttr('checked','checkbox');
+		$('#newRailroadForm #status').prop('checked', false);
 		$('#updateRailroadForm .rail_id_hidden').val('');
 		//$('#newRailroad').modal('show'); 
 
 	});
 
-	/***
-	create railroad
-	***/
+/***
+create railroad
+***/
 	$("form#newRailroadForm").on("submit", function(e){
 		e.preventDefault();
 		
@@ -351,10 +487,15 @@ $(document).ready(function(){
 						showSuccessMsg();
 						setTimeout(function(){
 					        location.reload();
-					    }, 3000)   
+					    }, 3000);   
 					}else{
-						var data = JSON.parse(data);
-						showErrorMsg(data);
+						try{
+							var data = JSON.parse(data);
+							showErrorMsg(data);
+						}catch(e){
+							showCustomMsg(data);
+						}
+						
 					}
 				},
 				error: function(e){
@@ -375,23 +516,28 @@ $(document).ready(function(){
 				var status = $('table').find('input[value="'+railroad_id_value+'"]').parent().next('td').next('td').next('td').text();
 				$('#updateRailroadForm #railroad').val(railroad);
 				$('#updateRailroadForm #description').val(description);
-				$('#updateRailroadForm #status').find('option').removeAttr('selected');
-			
+				$('#updateRailroadForm #status').prop('checked', false);			
 				if(status!=''){
-					$('#updateRailroadForm #status option[value='+status+']').attr('selected','selected');
-					$('#updateRailroadForm #status option[value='+status+']').prop('selected','selected');
+				
+						$('#updateRailroadForm #status[value='+status+']').attr('checked','checkbox');
+						$('#updateRailroadForm #status[value='+status+']').prop('checked','checked');
 				}
+
 
 				$('.rail_id_hidden').val(railroad_id_value);
 				$('#updateRailroadForm .status_message_div').html('');
 		}else{
+			//Create Rail road form
 				$('#newRailroadForm #railroad').val('');
 				$('#newRailroadForm #description').val('');
-				$('#newRailroadForm #status option[value=Created]').attr('selected','selected');
+				$('#newRailroadForm #status').removeAttr('checked','checkbox');
+				$('#newRailroadForm #status').prop('checked', false);
 				$('#newRailroadForm .status_message_div').html('');
+			//Update Rail road form
 				$('#updateRailroadForm #railroad').val('');
 				$('#updateRailroadForm #description').val('');
-				$('#updateRailroadForm #status option[value=Created]').attr('selected','selected');
+				$('#updateRailroadForm #status').removeAttr('checked','checkbox');
+				$('#updateRailroadForm #status').prop('checked', false);
 				$('#updateRailroadForm .status_message_div').html('');
 				$('.rail_id_hidden').val('');
 		}
@@ -409,20 +555,23 @@ $(document).ready(function(){
 
 		$('#updateRailroadForm #railroad').val(railroad);
 		$('#updateRailroadForm #description').val(description);
-		$('#updateRailroadForm #status').find('option').removeAttr('selected');
-			
-				if(status!=''){
-					$('#updateRailroadForm #status option[value='+status+']').attr('selected','selected');
-					$('#updateRailroadForm #status option[value='+status+']').prop('selected','selected');
-				}
+		$('#updateRailroadForm #status').removeAttr('checked','checkbox');
+		$('#updateRailroadForm #status').prop('checked', false);			
+		if(status!=''){
+		
+			$('#updateRailroadForm #status[value='+status+']').attr('checked','checkbox');
+			$('#updateRailroadForm #status[value='+status+']').prop('checked','checked');
+		}
 		$('#updateRailroadForm .rail_id_hidden').val(railroad_id);
 		
 		//var bscid = $(this).next().html();
 		$('#updateRailroad').modal('show');
 	});
-	/***
-	Update Railroad
-	***/
+
+
+/***
+Update Railroad
+***/
 	$("form#updateRailroadForm").on("submit", function(e){
 		e.preventDefault();
 		var formData = $(this).serialize();
@@ -452,9 +601,9 @@ $(document).ready(function(){
 
 
 
-	/***
-	Track designation starts from here
-	***/
+/***
+Track designation starts from here
+***/
 
 	$('#newTrack').on('show.bs.modal', function () {
 	//$(".newTrackButton").on("click", function(e){
@@ -466,9 +615,9 @@ $(document).ready(function(){
 
 	});
 
-	/***
-	create track
-	***/
+/***
+create track
+***/
 	$("form#newTrackForm").on("submit", function(e){
 		e.preventDefault();
 		
@@ -526,9 +675,10 @@ $(document).ready(function(){
 		//var bscid = $(this).next().html();
 		$('#updateTrack').modal('show');
 	});
-	/***
-	Update Track
-	***/
+
+/***
+Update Track
+***/
 	$("form#updateTrackForm").on("submit", function(e){
 		e.preventDefault();
 		var formData = $(this).serialize();
@@ -558,17 +708,170 @@ $(document).ready(function(){
 
 
 
+/***
+Lines Functions starts from here
+***/
 
-	
+$('#newLineModal').on('show.bs.modal', function () {
+
+		$('#newLineForm #linecode').val('');
+		$('#newLineForm #description').val('');
+		$('#newLineForm .status_message_div').html('');
+		$('#newLineForm #status').prop('checked', false);			
+		$('#updateLineForm #status').prop('checked', false);
+		if(status!=''){
+		
+				$('#updateLineForm #status[value='+status+']').attr('checked','checkbox');
+				$('#updateLineForm #status[value='+status+']').prop('checked','checked');
+		}
+		//$('#updateLineForm #status option[value=Created]').attr('selected','selected');
+		$('#updateLineForm .line_id_hidden').val('');
+		//$('#updateLineForm #linecode').val('');
+		//$('#updateLineForm #description').val('');
+		//$('#updateLineForm .status_message_div').html('');
+	});
+
+
+/***
+ADD NEW Location type
+***/
+	$("form#newLineForm").on("submit", function(e){
+		e.preventDefault();
+		$('#newLineForm .status_message_div').html('Processing.....');
+		var formData = $(this).serialize();
+		
+		$.ajax({
+				type: 'POST',
+				url: base_url+'/lines/create_line',
+				data: formData,
+				success: function(data){
+					console.log(data);
+					if (data == 200) {
+						showSuccessMsg();
+						setTimeout(function(){
+					        location.reload();
+					    }, 3000);
+					}else{
+						try{
+							var data = JSON.parse(data);
+							showErrorMsg(data);
+						}catch(e){
+							showCustomMsg(data);
+						}
+					}
+				},
+				error: function(e){
+					console.log(e);
+				}
+			});
+	});
+
+	$(document).on('click', '.updatelineModal', function(e){
+		e.preventDefault();
+		console.log('clicked');
+		var line_id = $(this).find('.hidden_line_id').val();
+
+		$('form#updateLineForm .description').val();
+		var linecode = $(this).next().text();
+		var description = $(this).next().next().text();
+		var status = $(this).next().next().next().text();
+
+		//var html = ' <input type="hidden" class="line_id_hidden" name="line_id" value="'+line_id+'" />';
+
+		$('#updateLineForm #linecode').val(linecode);
+		$('#updateLineForm #description').val(description);
+		
+
+		$('#updateLineForm #status').prop('checked', false);
+		if(status!=''){
+		
+				$('#updateLineForm #status[value='+status+']').attr('checked','checkbox');
+				$('#updateLineForm #status[value='+status+']').prop('checked','checked');
+		}
+
+		$('.line_id_hidden').val(line_id);
+		$('#updateLineForm .status_message_div').html('');
+		//var bscid = $(this).next().html();
+		$('#updatelineModal').modal('show');
+	});
+
+	$('.line_reset').on('click', function(){
+var line_id_value = $('.line_id_hidden').val();
+if(line_id_value!=''){
+var linecode = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').text();
+		var description = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').next('td').text();
+		var status = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').next('td').next('td').text();
+		$('#updateLineForm #linecode').val(linecode);
+		$('#updateLineForm #description').val(description);
+		$('#updateLineForm #status').prop('checked', false);
+		if(status!=''){
+		
+				$('#updateLineForm #status[value='+status+']').attr('checked','checkbox');
+				$('#updateLineForm #status[value='+status+']').prop('checked','checked');
+		}
+
+		$('.line_id_hidden').val(line_id_value);
+		$('#updateLineForm .status_message_div').html('');
+}else{
+		$('#newLineForm #linecode').val('');
+		$('#newLineForm #description').val('');
+		$('#newLineForm #status').prop('checked', false);
+		$('#newLineForm .status_message_div').html('');
+		
+		$('#updateLineForm #linecode').val('');
+		$('#updateLineForm #description').val('');
+		$('#updateLineForm #status').prop('checked', false);
+		$('#updateLineForm .line_id_hidden').val('');
+		$('#updateLineForm .status_message_div').html('');
+
+		}	
+	});
+
+/***
+	UPDATE Location type
+***/
+	$("form#updateLineForm").on("submit", function(e){
+		$('#updateLineForm .status_message_div').html('Processing.....');
+		e.preventDefault();
+		var formData = $(this).serialize();
+		$.ajax({
+				type: 'POST',
+				url: base_url+'/lines/update_line',
+				data: formData,
+				success: function(data){
+					console.log(data);
+					if (data == 200) {
+						showSuccessMsg();
+						setTimeout(function(){
+					        location.reload();
+					    }, 3000);
+					}else{
+
+						var data = JSON.parse(data);
+						showErrorMsg(data);
+					}
+				},
+				error: function(e){
+					console.log(e);
+				}
+			});
+	});
 
 
 
-
-	/***
+/***
 	 USER ADMIN DATA TABLE 
-	***/
-	//$('.users-data-users').DataTable();
-	 var table = $('.users-data-users').DataTable({
+***/
+	
+	$('.users-data-users').DataTable();
+	$('.railroad-administrator').DataTable();
+	$('.line-administration').DataTable();
+	$('.location-administration').DataTable();
+	$('.location-type-administration').DataTable();
+	$('.Track-Designation-Administration').DataTable();
+	
+	
+	 /*var table = $('.users-data-users').DataTable({
 					 	"processing": true,
 				        "serverSide": true,
 				        "ajax": {
@@ -600,145 +903,9 @@ $(document).ready(function(){
 					      	//add class to expand row
 					      	$(row).addClass('parent');
 					    }
-			    });
+			    });*/
 
 
-
-
-
-
-
-
-/***
-Lines Functions starts from here
-***/
-
-$('#newLineModal').on('show.bs.modal', function () {
-
-		$('#newLineForm #linecode').val('');
-		$('#newLineForm #description').val('');
-		$('#newLineForm .status_message_div').html('');
-		$('#updateLineForm #status option[value=Created]').attr('selected','selected');
-		$('#updateLineForm .line_id_hidden').val('');
-		//$('#updateLineForm #linecode').val('');
-		//$('#updateLineForm #description').val('');
-		//$('#updateLineForm .status_message_div').html('');
-	});
-	/***
-	ADD NEW Location type
-	***/
-	$("form#newLineForm").on("submit", function(e){
-		e.preventDefault();
-		$('#newLineForm .status_message_div').html('Processing.....');
-		var formData = $(this).serialize();
-		
-		$.ajax({
-				type: 'POST',
-				url: base_url+'/lines/create_line',
-				data: formData,
-				success: function(data){
-					console.log(data);
-					if (data == 200) {
-						showSuccessMsg();
-						setTimeout(function(){
-					        location.reload();
-					    }, 3000);
-					}else{
-						var data = JSON.parse(data);
-						showErrorMsg(data);
-					}
-				},
-				error: function(e){
-					console.log(e);
-				}
-			});
-	});
-
-	$('.updatelineModal').on('click', function(e){
-		e.preventDefault();
-		var line_id = $(this).find('.hidden_line_id').val();
-
-		$('form#updateLineForm .description').val();
-		var linecode = $(this).next().text();
-		var description = $(this).next().next().text();
-		var status = $(this).next().next().next().text();
-
-		//var html = ' <input type="hidden" class="line_id_hidden" name="line_id" value="'+line_id+'" />';
-
-		$('#updateLineForm #linecode').val(linecode);
-		$('#updateLineForm #description').val(description);
-		
-
-		$('#updateLineForm #status').find('option').removeAttr('selected');
-			
-				if(status!=''){
-					$('#updateLineForm #status option[value='+status+']').attr('selected','selected');
-					$('#updateLineForm #status option[value='+status+']').prop('selected','selected');
-				}
-
-		$('.line_id_hidden').val(line_id);
-		$('#updateLineForm .status_message_div').html('');
-		//var bscid = $(this).next().html();
-		$('#updatelineModal').modal('show');
-	});
-
-	$('.line_reset').on('click', function(){
-var line_id_value = $('.line_id_hidden').val();
-if(line_id_value!=''){
-var linecode = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').text();
-		var description = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').next('td').text();
-		var status = $('table').find('input[value="'+line_id_value+'"]').parent().next('td').next('td').next('td').text();
-		$('#updateLineForm #linecode').val(linecode);
-		$('#updateLineForm #description').val(description);
-		$('#updateLineForm #status').find('option').removeAttr('selected');
-			
-				if(status!=''){
-					$('#updateLineForm #status option[value='+status+']').attr('selected','selected');
-					$('#updateLineForm #status option[value='+status+']').prop('selected','selected');
-				}
-
-		$('.line_id_hidden').val(line_id_value);
-		$('#updateLineForm .status_message_div').html('');
-}else{
-		$('#newLineForm #linecode').val('');
-		$('#newLineForm #description').val('');
-		$('#newLineForm .status_message_div').html('');
-		$('#newLineForm #status option[value=Created]').attr('selected','selected');
-		$('#updateLineForm #linecode').val('');
-		$('#updateLineForm #description').val('');
-		$('#updateLineForm .line_id_hidden').val('');
-		$('#updateLineForm .status_message_div').html('');
-
-		}	});
-	/***
-	UPDATE Location type
-	***/
-	$("form#updateLineForm").on("submit", function(e){
-		$('#updateLineForm .status_message_div').html('Processing.....');
-		e.preventDefault();
-		var formData = $(this).serialize();
-		$.ajax({
-				type: 'POST',
-				url: base_url+'/lines/update_line',
-				data: formData,
-				success: function(data){
-					console.log(data);
-					if (data == 200) {
-						showSuccessMsg();
-						setTimeout(function(){
-					        location.reload();
-					    }, 3000);
-					}else{
-
-						var data = JSON.parse(data);
-						showErrorMsg(data);
-					}
-				},
-				error: function(e){
-					console.log(e);
-				}
-			});
-	});
 
 
 
@@ -766,18 +933,15 @@ var linecode = $('table').find('input[value="'+line_id_value+'"]').parent().next
 
 
 }); 
-	
-	function resetTestingOfficerForm(){
-			$('#newTestingOfficerModal #bscid, #newTestingOfficerModal #name').removeAttr('disabled');
-			$('#newTestingOfficerModal #bscid').val("");
-			$('#newTestingOfficerModal #name').val("");
-			$('#newTestingOfficerModal #department').val("");
-			$('#newTestingOfficerModal #business_unit').val("");
 
-			$('#newTestingOfficerModal #status_validity').val("");
-			$('#newTestingOfficerModal #status').val("");
+
+	function resetTestingOfficerForm(){
+			
+
+
 			$('#newTestingOfficerModal input:radio').prop('checked', false);
 			$('#newTestingOfficerModal input:checkbox').prop('checked', false);
+			$('input[name="me_no_roles[]"], input[name="me_yes_roles[]"]').removeAttr('disabled');
 			$('.status_message_div').html('');
 	}
 
@@ -794,8 +958,142 @@ var linecode = $('table').find('input[value="'+line_id_value+'"]').parent().next
 						error_data +=	'</div>';
 						$('.status_message_div').html(error_data);
 	}
+	function showCustomMsg(data){
+		var error_data = '<div class="alert alert-danger">';
+						error_data +=	'<ul class="list-group">';
+						error_data += 	'<li>'+data+'</li>';
+						
+						error_data +=	'</ul>';
+						error_data +=	'</div>';
+						$('.status_message_div').html(error_data);
+	}
 	function showSuccessMsg(){
 		$('.status_message_div').html('<div class="alert alert-success">'+
 														  '<strong>Success!</strong> Data Successfully Updated.'+
 														'</div>');
 	}
+
+	 //var $j_custom = jQuery.noConflict(true);
+
+
+// User filter API
+/*
+$(document).ready(function () {
+      $( function() {
+       $( "#f_bscid" ).autocomplete({
+        maxShowItems:4,	
+        minLength:3,	
+        source: function( request, response ) { 
+        var searchText = request.term;
+        console.log(searchText);
+         $.ajax({
+          url: "http://localhost/ecr2/Api/userFilter",
+          type: 'get',
+          dataType: "json",
+          data: {
+           bscid: request.term
+          },
+          success: function( data ) {
+           response( data );
+          }
+      });
+      },
+      select: function (event, ui) {
+       // Set selection
+       $('#f_bscid').val(ui.item.label); // display the selected text
+       return false;
+      }
+       
+       });
+
+       });
+    });
+ */
+$(document).on('focus','.autocomplete-input', handleAutocomplete);
+
+function getId(element){
+    var id, idArr;
+    id = element.attr('id');
+    idArr = id.split("_");
+    return idArr[idArr.length - 1];
+}
+    
+function getFieldValue(type){
+    var fieldValue;
+    switch (type) {
+    	case 'f_bscid':
+            fieldValue = 0;
+            break;
+        case 'f_first_name':
+            fieldValue = 1;
+            break;
+        case 'f_last_name':
+            fieldValue = 2;
+            break;
+        case 'f_job_code':
+            fieldValue = 3;
+            break;
+        case 'f_mgmt_ctr_id':
+            fieldValue = 4;
+            break;
+        default:
+            break;
+    }
+    return fieldValue;
+}
+
+function handleAutocomplete() {
+    var type, fieldValue, currentEle; 
+    type = $(this).attr('name');
+    console.log(type);
+    fieldValue = getFieldValue(type);
+    currentEle = $(this);
+
+    if(typeof fieldValue === 'undefined') {
+        return false;
+    }
+
+    $(this).autocomplete({
+    	maxShowItems:4,	
+        minLength:3,
+        source: function( data, cb ) {   
+            $.ajax({
+                url:'http://localhost/ecr2/Api/userFilter',
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    name:  data.term,
+                    fieldValue: fieldValue
+                },
+                success: function(res){
+                    var result;
+                    if (res.length) {
+                        result = $.map(res, function(obj){
+         
+                            var arr = obj.split("|");
+                            console.log(arr);
+                            console.log(fieldValue);
+                            return {
+                                label: arr[fieldValue],
+                                value: arr[fieldValue],
+                                data : obj
+                            };
+                        });
+                    }
+                    cb(result);
+                }
+            });
+        },
+        select: function( event, ui ) {
+        	if(fieldValue == 0){
+        	resArr = ui.item.data.split(" ");
+        	console.log(resArr);
+            $('#f_bscid').val(resArr[0]); // display the selected text
+             return false; 	
+        }
+            
+        }         
+    });
+}
+              
+	

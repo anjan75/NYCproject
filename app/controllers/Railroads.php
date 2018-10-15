@@ -8,6 +8,7 @@ class Railroads extends Controller {
     }
 
     $this->railRoads = $this->model('RailRoad');
+    $this->userModel = $this->model('User');
   }
   
 
@@ -15,9 +16,9 @@ class Railroads extends Controller {
     $data = [];
    // $data['railroads'] = $this->railRoads->getRailRoads();
     $data['railroads'] = $this->railRoads->getRailRoadById();
-
+    $data['status'] = $this->userModel->getStatusByValue();
     
-/*    echo "<pre>";
+/*  echo "<pre>";
     print_r($data);
     echo "<pre>";
     exit();*/
@@ -28,9 +29,12 @@ class Railroads extends Controller {
   public function create_rail_road(){
     $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
     $input_data = $_POST;
+    $input_data['status'] = isset($input_data['status']) ? $input_data['status'] : 'Active';
     $user_id = $_SESSION['user_id'];
     $v = new Valitron\Validator($input_data);
     $v->rule('required', array('railroad','description'))->message('{field} is required');
+
+    
    
     $v->labels(array(
       'railroad' => 'Railroad Short Text',
@@ -51,13 +55,13 @@ class Railroads extends Controller {
           'created_by' => $user_id,
 
         ];
-      
-          if($this->railRoads->CreateRailRoad($data)){
-            // success
-            echo 200;
-          }else{
-            echo "Failed! FALSE";
-          }
+        if ($this->railRoads->isRailRoadExists($data['railroad'], $data['description'])) {
+          echo "Railroad Already Existed";
+        }else if($this->railRoads->CreateRailRoad($data)){
+          echo 200;
+        }else{
+          echo "Failed! FALSE";
+        }
       
       
       
@@ -69,11 +73,12 @@ class Railroads extends Controller {
     }
   }
 
-  // create new Rail Road
+  // Update Rail Road
   public function update_rail_road(){
     
     $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
     $input_data = $_POST;
+    $input_data['status'] = isset($input_data['status']) ? $input_data['status'] : 'Active';
     $user_id = $_SESSION['user_id'];
     $rid = $input_data['railroad_id'];
     $v = new Valitron\Validator($input_data);
@@ -85,7 +90,7 @@ class Railroads extends Controller {
         'railroad_id' => 'Railroad ID',
         /*'railroad' => 'Railroad'*/
     ));
-    
+  
     if($v->validate()) {
         $data = [
           'railroad' => $input_data['railroad'],

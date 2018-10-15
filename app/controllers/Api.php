@@ -16,6 +16,9 @@ class Api extends Controller {
   		$user = $this->userModel->getUserByBSID($bscid);
   		$user['roles'] = $this->userModel->getUserRoles($bscid);
   	}
+    
+    
+
   	$this->data['status'] = true;
   	$this->data['message'] = 'success';
   	$this->data['data'] = $user;
@@ -26,6 +29,7 @@ class Api extends Controller {
     
      
     $roles = $this->userModel->getRoles();
+    
 
     $this->data['status'] = true;
     $this->data['message'] = 'success';
@@ -33,4 +37,24 @@ class Api extends Controller {
     
     echo json_encode($this->data);
   }
+
+  //User filter 
+  public function userFilter(){
+
+    $fieldValue = $_GET['fieldValue'];
+    $name = !empty($_GET['name']) ? trim($_GET['name']) : '';
+    if ($name != null) {
+      $user = $this->userModel->getUserByFilter($name, $fieldValue);
+    }  
+    $data = array();  
+    foreach ($user as $key => $value) {
+      $userIdWithName = $value['BSC_EMPLID'] .str_repeat(' ',8).$value['FIRST_NAME'].' '.$value['LAST_NAME'];
+      $row =$userIdWithName. '|' .$value['FIRST_NAME']. '|' .$value['LAST_NAME']. '|' .$value['JOBCODE']. '|' .$value['DEPTID'];
+      array_push($data, $row);
+    }
+    //print_r($data);exit();  
+   
+    echo json_encode($data);
+  }
+
 }

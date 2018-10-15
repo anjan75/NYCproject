@@ -1,3 +1,4 @@
+
 <?php
 
 class RailRoad {
@@ -58,32 +59,22 @@ class RailRoad {
 
 
 	public function getRailRoadById($id='') {
-		/*$this->db->query('SELECT * FROM RAILROAD WHERE RAILROAD_ID = :RAILROAD_ID');
-		$this->db->bind(':RAILROAD_ID', $id);*/
-		//$data = '';
-		//$this->db->query('BEGIN ECR2_PKG.Get_Railroad(:RAILROAD_ID); END;');
-
-		$query = 'BEGIN ECR2_PKG.Get_Railroad(:RAILROAD_ID, :START, :END, :RAILROAD); END;';
-		/*$row = $this->db->refcurExecFetchAll($query, "Get Rail Road List","RAILROAD", array(array(":RAILROAD_ID", $id, 1)));*/
-
+		/*$id = 70;*/
+		$query = 'BEGIN ECR2_PKG.Get_Railroad(:RAILROAD_ID, :BUSINESS_UNIT_ID, :START, :END, :RAILROAD); END;';
+		$business_unit_id = $_SESSION['user_business_unit_id'];
 		$row = $this->db->refcurExecFetchAll(
 												$query, 
 												"Get Rail Road List",
 												"RAILROAD", 
 												array(
 													[":RAILROAD_ID", $id, 1],
+													[":BUSINESS_UNIT_ID", $business_unit_id, 0],
 													[":START", 0, 1],
-													[":END", 30, 2],
+													[":END", 10000, 0],
 													
 												)
 											);
-
-		/*$this->db->bind(':RAILROAD_ID', $id, PDO::PARAM_INT);
-		$this->db->bind(':RAILROAD', $data);*/
-
-		// $row = $this->db->singleArray();
-		//$row = $this->db->execute();
-
+		
 		return $row;
 	} 
 /*	public function getRailRoadByName($name) {
@@ -96,6 +87,19 @@ class RailRoad {
 		return $row;
 	} 
 	*/
+	public function isRailRoadExists($name, $desc) {
+		$this->db->query('SELECT RAILROAD_ID FROM RAILROAD WHERE DESCRIPTION = :DESCRIPTION OR RAILROAD = :RAILROAD');
+		$this->db->bind(':RAILROAD', $name);
+		$this->db->bind(':DESCRIPTION', $desc);
+
+		$row = $this->db->singleArray();
+
+		if (isset($row['RAILROAD_ID']) && $row['RAILROAD_ID'] > 0) {
+			return true;
+		}
+		return false;
+	} 
+	
 	//Show Users data in in USER ADMINISTRATOR
 	public function getRailRoads($inputs = null) {
 		$page = isset($inputs['page']) ? $inputs['page'] : 1;

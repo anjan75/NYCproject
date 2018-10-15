@@ -37,7 +37,7 @@ class Track {
 		$this->db->bind(':BUSINESS_UNIT_ID', $data['business_unit_id']);
 		$this->db->bind(':CREATED_BY', $data['created_by']);
 		$this->db->bind(':CREATION_DATE', '');
-		$this->db->bind(':STATUS', $data['status']);
+		$this->db->bind(':STATUS', $data['Status']);
 
 		if($this->db->execute()) {
 			return true;
@@ -81,7 +81,7 @@ class Track {
 
 		$id='';
 		$query = 'BEGIN ECR2_PKG.Get_TRACK_DESIGNATION(:TRACK_DESIGNATION_ID, :TRACK_DESIGNATION); END;';
-		$row = $this->db->refcurExecFetchAll($query, "Get track List","TRACK_DESIGNATION", array(array(":TRACK_DESIGNATION_ID", $id, 1)));
+		$row = $this->db->refcurExecFetchAll($query, "Get track List","TRACK_DESIGNATION", array(array(":TRACK_DESIGNATION_ID", $id, 0)));
 
 		return $row;
 	} 

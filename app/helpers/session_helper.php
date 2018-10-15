@@ -52,6 +52,20 @@ function hasPermissionTest($key) {
 	    }
 	     return false;
 }
+///is_user_plan Training Reports
+function isUserPlan($user_plan=''){
+	if (!empty($user_plan)) {
+		
+		if(isset($_SESSION['user_plan_id'])){
+
+				if ($_SESSION['user_plan_id'] == $user_plan) {
+					return true;
+				}
+		}
+	}
+	return false;
+}
+
 ///is_user_role admin/view reports
 function isUserRole($role_code=''){
 	if (!empty($role_code)) {
@@ -65,6 +79,8 @@ function isUserRole($role_code=''){
 	}
 	return false;
 }
+
+
 
 function hasPermission($roles=array(), $business_unit=null) {
 	if(isset($_SESSION['user_roles'])){

@@ -57,7 +57,7 @@
         echo $m['message'], "\n";
         exit;
       }
-     $query = oci_parse($conn, "SELECT * FROM EHOST_INFO");
+     $query = oci_parse($conn, "SELECT * FROM MDS_INFO");
      oci_execute($query);
      $i=0;
      while (($row = oci_fetch_array($query, OCI_ASSOC)) != false) {

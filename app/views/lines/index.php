@@ -1,22 +1,30 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
-<h3>Lines Administration</h3>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Lines Administration</h3>    
+  </div>
+  <div class="col-md-6">
+      <div class="text-right"> 
+        <input type="button"  data-toggle="modal" data-target="#newLineModal" class="btn btn-primary" style="margin-top: 10px;" value="Add New Line">
+      </div>
+  </div>
+</div>
+
+ <hr />
 <form  action="">
-  <hr />
+ 
   <table class="table table-bordered table-striped table-sm line-administration">
     <thead class="thead-dark" >
     <tr>
-    <!--   <th scope="col" style="width: 10%; text-align: center;">Modify</th>
-      <th scope="col" style="width: 25%; text-align: center;">Line Short Text</th>
-      <th scope="col" style="text-align: center;">Line Description</th>
-      <th scope="col" style="width: 10%; text-align: center;">Status</th> -->
-      <th scope="col" style="text-align: center;">Modify</th>
-      <th scope="col" style="text-align: center;">Line Short Text</th>
-      <th scope="col" style="text-align: center;">Line Description</th>
-      <th scope="col" style="text-align: center;">Status</th>
+      <th>Modify</th>
+      <th>Line Short Text</th>
+      <th>Line Description</th>
+      <th>Status</th>
     </tr>
     </thead>
     <tbody>
-      <tr>
+      
          <?php if(isset($data['lines']) && is_array($data['lines']) && count($data['lines']) > 0){ ?>
         <?php $i=0; ?>
         <?php for ($i = 0; $i < count($data['lines']['DESCRIPTION']); $i++){ ?>
@@ -31,13 +39,11 @@
         </tr>
         <?php  } ?>
       <?php } ?>
-      </tr>
+      
     </tbody>
   </table>
 
-  <div class="text-center"> 
-        <input type="button"  data-toggle="modal" data-target="#newLineModal" class="btn btn-primary" style="margin-top: 10px;" value="Add New Line">
-  </div>
+ 
 
 </form>
 <!-- Modal -->
@@ -71,11 +77,17 @@
             </div>
             <div class="col-md-3">
               
-               <select name="status" id="status" class="form-control">
+              <!--  <select name="status" id="status" class="form-control">
                       <option value="Created">CREATED</option>
                       <option value="Modified">MODIFIED</option>
                       <option value="Inactive">INACTIVE</option>
-                  </select>
+                  </select> -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Inactive" id="status" name="status">
+                    <label class="form-check-label" for="Status">
+                      Inactive
+                    </label>
+                  </div>
             </div>
           </div>
           <div class="form-group row">
@@ -107,7 +119,7 @@
     </div>
   </div>
 </div>
-<!-- UPDATE MODAL -->
+<!-- UPDATE MODAL  -->
 <div class="modal fade" id="updatelineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -138,11 +150,12 @@
             </div>
             <div class="col-md-4">
               
-               <select name="status" id="status" class="form-control">
-                      <option value="Created">CREATED</option>
-                      <option value="Modified">MODIFIED</option>
-                      <option value="Inactive">INACTIVE</option>
-                  </select>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Inactive" id="status" name="status">
+                    <label class="form-check-label" for="Status">
+                      Inactive
+                    </label>
+                  </div>
             </div>
           </div>
           <div class="form-group row">

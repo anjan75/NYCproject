@@ -24,10 +24,11 @@ class Lines extends Controller {
     $this->view('Lines/index', $data);
   }
 
-  // create new Rail Road
+  // create new Line
   public function create_line(){
     $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
     $input_data = $_POST;
+    $input_data['status'] = isset($input_data['status']) ? $input_data['status'] : 'Active';
     $user_id = $_SESSION['user_id'];
     $v = new Valitron\Validator($input_data);
     $v->rule('required', array('description', 'linecode'))->message('{field} is required');
@@ -41,16 +42,19 @@ class Lines extends Controller {
         $data = [
           'linecode' => $input_data['linecode'],
           'description' => $input_data['description'],
+          'business_unit_id' => $_SESSION['user_business_unit_id'],
           'status' => $input_data['status'],
           'created_by' => $user_id,
         ];
-      
-          if($this->Lines->CreateLine($data)){
-            // success
-            echo 200;
-          }else{
-            echo "Failed! FALSE";
-          }
+        
+        if ($this->Lines->isLineExists($data['linecode'], $data['description'])) {
+          echo "Line Already Existed";
+        }else if($this->Lines->CreateLine($data)){
+          // success
+          echo 200;
+        }else{
+          echo "Failed! FALSE";
+        }
       
       
       
@@ -62,11 +66,12 @@ class Lines extends Controller {
     }
   }
 
-  // create new Rail Road
+  // Update line
   public function update_line(){
     
     $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
     $input_data = $_POST;
+    $input_data['status'] = isset($input_data['status']) ? $input_data['status'] : 'Active';
     $user_id = $_SESSION['user_id'];
     $rid = $input_data['line_id'];
     $v = new Valitron\Validator($input_data);

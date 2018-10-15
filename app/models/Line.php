@@ -10,11 +10,11 @@ class Line {
 
 	public function CreateLine($data = null) {
 		
-		$query = 'BEGIN ECR2_PKG.Add_LINES(:LINE_CODE, :DESCRIPTION, :CREATED_BY, :CREATION_DATE, :STATUS); END;';
+		$query = 'BEGIN ECR2_PKG.Add_LINES(:LINE_CODE, :DESCRIPTION, :BUSINESS_UNIT_ID, :CREATED_BY, :CREATION_DATE, :STATUS); END;';
 		$this->db->query($query);
 		$this->db->bind(':LINE_CODE', $data['linecode']); // check
 		$this->db->bind(':DESCRIPTION', $data['description']);
-		
+		$this->db->bind(':BUSINESS_UNIT_ID', $data['business_unit_id']);
 		$this->db->bind(':CREATED_BY', $data['created_by']);
 		$this->db->bind(':CREATION_DATE', '');
 		$this->db->bind(':STATUS',  $data['status']);
@@ -53,15 +53,16 @@ class Line {
 		$row = $this->db->refcurExecFetchAll($query, "Get line List","LINES", array(array(":LINE_ID", $id, 1)));*/
 
 
-		$query = 'BEGIN ECR2_PKG.Get_LINES(:LINE_ID,  :START, :END, :LINES); END;';
+		$query = 'BEGIN ECR2_PKG.Get_LINES(:LINE_ID, :BUSINESS_UNIT_ID, :START, :END, :LINES); END;';
 		$row = $this->db->refcurExecFetchAll(
 												$query, 
 												"Get Rail Road List",
 												"LINES", 
 												array(
 													[":LINE_ID", $id, 1],
+													[":BUSINESS_UNIT_ID", $id, 0],
 													[":START", 0, 1],
-													[":END", 30, 2],
+													[":END", 10000, 0]
 													
 												)
 											);
@@ -84,7 +85,18 @@ class Line {
 
 		return $row;
 	} */
-	
+	public function isLineExists($name, $desc) {
+		$this->db->query('SELECT LINE_ID FROM LINES WHERE DESCRIPTION = :DESCRIPTION OR LINE_CODE = :LINE_CODE');
+		$this->db->bind(':LINE_CODE', $name);
+		$this->db->bind(':DESCRIPTION', $desc);
+
+		$row = $this->db->singleArray();
+
+		if (isset($row['LINE_ID']) && $row['LINE_ID'] > 0) {
+			return true;
+		}
+		return false;
+	} 
 
 	//Show Users data in in USER ADMINISTRATOR
 	public function getLines($inputs = null) {
@@ -93,7 +105,7 @@ class Line {
 		$this->db->query('SELECT *
 						FROM LINE_CODE						
 						');
-		//$this->db->query('CALL Get_Railroad()');
+		//$this->db->query('CALL Get_LINE()');
 
 		$row = $this->db->resultArraySet();
 		return $row;

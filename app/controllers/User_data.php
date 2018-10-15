@@ -12,12 +12,121 @@ class User_data extends Controller {
 
   public function index() {
     $data = null;
-    /*$users = $this->userModel->getUsers();
-    foreach ($users as $ukey => $user) {
-      $users[$ukey]['roles'] = $this->userModel->getUserRoles($user['BSC_EMPLID']);
+    $users = null;
+    $user_admin_roles = array('User Administrator');   
+              
+    if (isUserRole('IT Administrator')) {
+      $users = $this->userModel->getUsers();
+    }elseif (hasPermission($user_admin_roles, "LIRR")) {
+      $users = $this->userModel->nonITusers(); // not IT and lirr 
+    }elseif (hasPermission($user_admin_roles, "MNR")) {
+      $users = $this->userModel->nonITusers(); // non IT MNR
     }
-    $data['users'] = $users;*/
+   
+
+    for ($i=0; $i < count($users['BSC_EMPLID']); $i++) {
+      $u[$users['BSC_EMPLID'][$i]]['BSC_EMPLID'] = $users['BSC_EMPLID'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['FULL_NAME'] = $users['FULL_NAME'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['DEPARTMENT'] = $users['DEPARTMENT'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['BUSINESS_UNIT'] = $users['BUSINESS_UNIT'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['STATUS_VALIDITY'] = $users['STATUS_VALIDITY'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['STATUS'] = $users['STATUS'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['PLAN_ROLE_ID'] = $users['PLAN_ROLE_ID'][$i];
+      //$u[$users['BSC_EMPLID'][$i]]['ROLE_ID'] = $users['ROLE_ID'][$i];
+      //$u[$users['BSC_EMPLID'][$i]]['ROLE_CODE'] = $users['ROLE_CODE'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['PLAN_ID'] = $users['PLAN_ID'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['JOBCODE'] = $users['JOBCODE'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['JOBCODE_DESCR'] = $users['JOBCODE_DESCR'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['POSITION_NUMBER'] = $users['POSITION_NUMBER'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['POSITION_DESC'] = $users['POSITION_DESC'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['MGT_CTR'] = $users['MGT_CTR'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['DEPT_DESCR'] = $users['DEPT_DESCR'][$i];
+
+
+
+      if (!isset($u[$users['BSC_EMPLID'][$i]]['ROLES'])) {
+        $u[$users['BSC_EMPLID'][$i]]['ROLES'] = [];
+      }
+      if (!in_array($users['ROLE_CODE'][$i], $u[$users['BSC_EMPLID'][$i]]['ROLES'])) 
+      {
+        $u[$users['BSC_EMPLID'][$i]]['ROLES'][] = $users['ROLE_CODE'][$i];
+      } 
+    }
+
+    /*echo "<pre>";
+    print_r($users);
+    echo "<pre>";
+    exit();*/
+    $data['users'] = $u;
     $this->view('user_data/index', $data);
+  }
+  public function search(){
+   $data = null;
+    $users = null;
+    $user_admin_roles = array('User Administrator');
+    $input_data['f_bscid'] = isset($_POST['f_bscid']) ? $_POST['f_bscid'] : null;
+    $input_data['f_first_name']  = isset($_POST['f_first_name']) ? $_POST['f_first_name'] : null;
+    $input_data['f_last_name']  = isset($_POST['f_last_name']) ? $_POST['f_last_name'] : null;
+    $input_data['f_job_code']  = isset($_POST['f_job_code']) ? $_POST['f_job_code'] : null;
+    $input_data['f_mgmt_ctr_id']  = isset($_POST['f_mgmt_ctr_id']) ? $_POST['f_mgmt_ctr_id'] : null;
+    $input_data['f_user_role'] = isset($_POST['f_user_role']) ? $_POST['f_user_role'] : null;
+    $input_data['f_status'] = isset($_POST['f_status']) ? $_POST['f_status'] : null;
+    $business_unit_id = $_SESSION['user_business_unit_id'];
+    if (isUserRole('IT Administrator')) {
+      $business_unit_id = '';
+    }
+    
+    
+    $users = $this->userModel->searchUsers($input_data, $business_unit_id);
+
+    /* if (isUserRole('IT Administrator')) {
+      $users = $this->userModel->searchUsers($input_data);
+    }elseif (hasPermission($user_admin_roles, "LIRR")) {
+      $users = $this->userModel->nonITusers(); // not IT and lirr 
+    }elseif (hasPermission($user_admin_roles, "MNR")) {
+      $users = $this->userModel->nonITusers(); // non IT MNR
+    }*/
+    for ($i=0; $i < count($users['BSC_EMPLID']); $i++) {
+      $u[$users['BSC_EMPLID'][$i]]['BSC_EMPLID'] = $users['BSC_EMPLID'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['FULL_NAME'] = $users['FULL_NAME'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['DEPARTMENT'] = $users['DEPARTMENT'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['BUSINESS_UNIT'] = $users['BUSINESS_UNIT'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['STATUS_VALIDITY'] = $users['STATUS_VALIDITY'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['STATUS'] = $users['STATUS'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['PLAN_ROLE_ID'] = $users['PLAN_ROLE_ID'][$i];
+      //$u[$users['BSC_EMPLID'][$i]]['ROLE_ID'] = $users['ROLE_ID'][$i];
+      //$u[$users['BSC_EMPLID'][$i]]['ROLE_CODE'] = $users['ROLE_CODE'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['PLAN_ID'] = $users['PLAN_ID'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['JOBCODE'] = $users['JOBCODE'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['JOBCODE_DESCR'] = $users['JOBCODE_DESCR'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['POSITION_NUMBER'] = $users['POSITION_NUMBER'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['POSITION_DESC'] = $users['POSITION_DESC'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['MGT_CTR'] = $users['MGT_CTR'][$i];
+      $u[$users['BSC_EMPLID'][$i]]['DEPT_DESCR'] = $users['DEPT_DESCR'][$i];
+
+
+
+      if (!isset($u[$users['BSC_EMPLID'][$i]]['ROLES'])) {
+        $u[$users['BSC_EMPLID'][$i]]['ROLES'] = [];
+      }
+      if (!in_array($users['ROLE_CODE'][$i], $u[$users['BSC_EMPLID'][$i]]['ROLES'])) 
+      {
+        $u[$users['BSC_EMPLID'][$i]]['ROLES'][] = $users['ROLE_CODE'][$i];
+      } 
+    }
+
+    /* echo "<pre>";
+    print_r($u);
+    echo "<pre>";
+    exit();*/
+    if(isset($u)){
+      $data['users'] = $u;
+    }else{
+     $data['users'] = " ";
+    }
+    $data['input_data'] = $input_data;
+    $this->view('user_data/index', $data);
+ 
   }
 
   public function getUsers() {
@@ -83,12 +192,14 @@ class User_data extends Controller {
         $name = explode(" ", $input_data['name']);
         $fname = (isset($name[0])) ? $name[0] : "";
         $lname = (isset($name[1])) ? $name[1] : "";
+        $input_data['end_date'] = isset($input_data['end_date']) ? $input_data['end_date'] : null;
         $data = [
           'first_name' => $fname,
           'last_name' => $lname,
           'bscid' => $input_data['bscid'],
           'status_validity' => $input_data['status_validity'],
           'status' => $input_data['status'],
+          'end_date' => $input_data['end_date'],
         ];
         $roles = [];
         $me_no_roles = isset($input_data['me_no_roles']) ? $input_data['me_no_roles'] : '';
@@ -111,7 +222,7 @@ class User_data extends Controller {
         
 
 
-        $this->userModel->update_TO($data);
+        //$this->userModel->update_TO($data); // updates user name 
         $this->userModel->update_TO_User_Plans($data);
         //step 1 delete all roles for bscid
         $this->userModel->delete_user_roles($input_data['bscid']);

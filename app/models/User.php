@@ -10,7 +10,7 @@ class User {
   
 	}
 
-	public function register($data) {
+	/*public function register($data) {
 		$this->db->query('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
 
 		$this->db->bind(':name', $data['name']);
@@ -24,7 +24,7 @@ class User {
 		}
 	}
 
-	/*public function login($email, $password) {
+	public function login($email, $password) {
 		$this->db->query('SELECT * FROM users WHERE email = :email');
 		$this->db->bind(':email', $email);
 
@@ -37,7 +37,7 @@ class User {
 		} else {
 			return false;
 		}
-	}*/
+	}
 
 	public function login($email, $password) {
 		$this->db->query('SELECT * FROM users WHERE email = :email');
@@ -64,16 +64,88 @@ class User {
 	public function getUserById($id) {
 		$this->db->query('SELECT * FROM users WHERE id = :id');
 		$this->db->bind(':id', $id);
-
 		$row = $this->db->singleArray();
-
 		return $row;
-	} 
+	}*/
+
+
+
+	/***
+		1) Retrive All users : Get_User_Plans_Sysad
+		2) Filter All users exept it admin : Get_User_plans_Sysad_FILTER
+		3) Retrives all users exept it admin : Get_User_Plans
+		4) Filter All users exept it admin : Get_User_plans_FILTER
+	***/
+	
+
+	// getUsers used to retrive all users so we will use Get_User_Plans_Sysad
+	public function getUsers($id=''){
+		$query = 'BEGIN ECR2_PKG.Get_User_Plans_Sysad(:BSC_EMPLID, :BUSINESS_UNIT_ID, :STATUS, :START, :END, :USERS); END;';
+
+		$row = $this->db->refcurExecFetchAll(
+												$query, 
+												"Get Users List",
+												"USERS", 
+												array(
+													[":BSC_EMPLID", $id, 0],
+													[":BUSINESS_UNIT_ID", $id, 0],
+													[":STATUS", '', 0],
+													[":START", 0, 0],
+													[":END", 100000, 0]
+												)
+											);
+		return $row;
+	}
+	// nonITusers used to retrive all users except it admin so we will use Get_User_Plans procedure
+	public function nonITusers($id=''){
+		$query = 'BEGIN ECR2_PKG.Get_User_Plans(:BSC_EMPLID, :BUSINESS_UNIT_ID, :STATUS, :START, :END, :USERS); END;';
+
+		
+		$row = $this->db->refcurExecFetchAll(
+												$query, 
+												"Get Users List",
+												"USERS", 
+												array(
+													[":BSC_EMPLID", $id, 0],
+													[":BUSINESS_UNIT_ID", $id, 0],
+													[":STATUS", '', 0],
+													[":START", 0, 0],
+													[":END", 100000, 0],
+												)
+											);
+		return $row;
+	}
+	public function searchUsers($data, $id=''){
+		/*$id = 2;
+		*/
+		$query = 'BEGIN ECR2_PKG.Get_User_plans_FILTER(:BSC_EMPLID, :BUSINESS_UNIT_ID, :FIRST_NAME, :LAST_NAME, :MGT_CENTER, :JOB_CODE, :STATUS, :START, :END, :USERS); END;';
+
+		$row = $this->db->refcurExecFetchAll(
+												$query, 
+												"Get Users List",
+												"USERS", 
+												array(
+													[":BSC_EMPLID", $data['f_bscid'], 0],
+													[":BUSINESS_UNIT_ID", $id, 0],
+													[":FIRST_NAME",$data['f_first_name'], 0],
+													[":LAST_NAME",$data['f_last_name'], 0],
+													[":MGT_CENTER",$data['f_mgmt_ctr_id'], 0],
+													[":JOB_CODE",$data['f_job_code'], 0],
+													[":STATUS", $data['f_status'], 0],
+													[":START", 0, 0],
+													[":END", 100000, 0],
+												)
+											);
+		return $row;
+	}
+
+
+
 	//Show Users data in in USER ADMINISTRATOR
-	public function getUsers($inputs = null) {
+	public function getUsers_BACKUP($inputs = null) {
 		$page = isset($inputs['page']) ? $inputs['page'] : 1;
 		$per_page = isset($inputs['per_page']) ? $inputs['per_page'] : 3;
-		$table = 'EHOST_INFO';
+		$table = 'MDS_INFO';
 	    $orderBy = isset($inputs['orderBy']) ? $inputs['orderBy'] : $table.'.BSC_EMPLID';
 	    $orderType = isset($inputs['orderType']) ? $inputs['orderType'] : 'DESC';
 	    $start  = isset($inputs['start']) ? $inputs['start'] : 1;
@@ -125,15 +197,15 @@ class User {
 	} 
 
 	public function getUserByBSID($id) {
-		$this->db->query('SELECT EHOST_INFO.*, DEPARTMENTS.*, BUSINESS_UNIT.*, USER_PLANS.*, EHOST_INFO.BSC_EMPLID as BSC_EMPLID
-						FROM EHOST_INFO 
+		$this->db->query('SELECT MDS_INFO.*, DEPARTMENTS.*, BUSINESS_UNIT.*, USER_PLANS.*, MDS_INFO.BSC_EMPLID as BSC_EMPLID
+						FROM MDS_INFO 
 						LEFT JOIN USER_PLANS
-						ON EHOST_INFO.BSC_EMPLID = USER_PLANS.BSC_EMPLID 
+						ON MDS_INFO.BSC_EMPLID = USER_PLANS.BSC_EMPLID 
 						LEFT JOIN DEPARTMENTS
 						ON DEPARTMENTS.DEPARTMENT_ID = USER_PLANS.DEPT_ID
 						LEFT JOIN BUSINESS_UNIT
 						ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
-						WHERE EHOST_INFO.BSC_EMPLID = :BSC_EMPLID
+						WHERE MDS_INFO.BSC_EMPLID = :BSC_EMPLID
 						');
 		$this->db->bind(':BSC_EMPLID', $id);
 
@@ -142,7 +214,7 @@ class User {
 		return $row;
 	} 
 	public function findUserByBSID($id) {
-		$this->db->query('SELECT BSC_EMPLID FROM EHOST_INFO WHERE BSC_EMPLID = :BSC_EMPLID');
+		$this->db->query('SELECT BSC_EMPLID FROM MDS_INFO WHERE BSC_EMPLID = :BSC_EMPLID');
 		$this->db->bind(':BSC_EMPLID', $id);
 
 		$row = $this->db->singleArray();
@@ -157,15 +229,48 @@ class User {
 		}
 	}
 
-	public function getEHOSTDATA() {
+	//User Admin Filter 
+	public function getUserByFilter($id, $value) {
+		
+		switch ($value) {
+			case '0':
+			$fieldName = 'BSC_EMPLID';   
+				break;
+			case '1':
+				$fieldName = 'FIRST_NAME';
+				break;
+			case  '2':
+			   $fieldName = 'LAST_NAME';
+			   break;
+			case  '3':
+			   $fieldName = 'JOBCODE';
+               break;
+            case  '4':
+			   $fieldName = 'DEPTID';
+               break;
+
+			
+		}
+		$this->db->query("SELECT * FROM MDS_INFO WHERE UPPER($fieldName) LIKE UPPER(:BSC_EMPLID) AND WORK_FOR_AGENCY IN ('LIRRD' ,'MNCRR') ORDER BY BSC_EMPLID DESC FETCH FIRST 100 ROWS ONLY ");
+		$searchText = $id. '%';
+		$this->db->bind(':BSC_EMPLID', $searchText);
+		//$this->db->execute();
+		//while ($row = $this->db->fetch()){
+			//print_r($row);exit();
+
+		//}
+		return $this->db->resultArraySet();
+	}
+
+	/*public function getEHOSTDATA() {
 		$this->db->query('SELECT *			             
-		                  FROM EHOST_INFO
+		                  FROM MDS_INFO
 		                  ');
 
 		$results = $this->db->resultArraySet();
 		
 		return $results;
-	}
+	}*/
 	public function getUserRoles($uid = null){
 		if ($uid != null and $uid > 0) {
 			$this->db->query('
@@ -177,12 +282,26 @@ class User {
 			$this->db->bind(':BSC_EMPLID', $uid);
 			return $this->db->resultArraySet();
 		}
-		return null;
+		return null;                    //LIRRD , MNCRR
 	}
 	public function getRoles(){
-			$this->db->query('
-					SELECT ROLE_ID, ROLE_CODE, MUTUALLY_EXCLUSIVE FROM ROLES
-				');
+			if(isUserRole('IT Administrator')){
+				$query = 'SELECT ROLE_ID, ROLE_CODE, MUTUALLY_EXCLUSIVE FROM ROLES';
+    			$this->db->query($query);
+    		}else if(isUserRole('User Administrator') && (isUserPlan('1') || isUserPlan('3'))){ // user admin with otp
+    			$roles = [7, 8, 1];
+    			$in  = str_repeat('?,', count($roles) - 1) . '?';
+				$rows = $this->db->executeQuery('SELECT ROLE_ID, ROLE_CODE, MUTUALLY_EXCLUSIVE FROM ROLES WHERE ROLE_ID NOT IN('.$in.')', $roles);
+    		}else if(isUserRole('User Administrator') && (isUserPlan('2') || isUserPlan('4'))){ //  user admin with training
+    			$roles = [5, 1];
+    			$in  = str_repeat('?,', count($roles) - 1) . '?';
+				$rows = $this->db->executeQuery('SELECT ROLE_ID, ROLE_CODE, MUTUALLY_EXCLUSIVE FROM ROLES WHERE ROLE_ID NOT IN('.$in.')', $roles);
+    		}else{ // get all roles if fails all above conditions
+    			$query = 'SELECT ROLE_ID, ROLE_CODE, MUTUALLY_EXCLUSIVE FROM ROLES WHERE ROLE_CODE != :ROLE_CODE ';
+				$this->db->query($query);
+				$this->db->bind(':ROLE_CODE', 'IT Administrator');
+    		}
+			
 			return $this->db->resultArraySet();
 	}
 
@@ -192,14 +311,14 @@ class User {
 		return $rows;
 	}
 	
-	public function getPermission($id) {
+	/*public function getPermission($id) {
 		$this->db->query('SELECT * FROM groups WHERE id = :id');
 		$this->db->bind(':id', $id);
 		$row = $this->db->singleArray();
 
 		return $row;
 	}
-	
+	*/
 
 	public function create_TO($data) {
 		$this->db->query('INSERT INTO posts (title, user_id, body) VALUES (:title, :user_id, :body)');
@@ -215,8 +334,7 @@ class User {
 		}
 	}
 	public function update_TO($data){
-
-		$this->db->query('UPDATE EHOST_INFO SET FIRST_NAME = :FIRST_NAME, LAST_NAME = :LAST_NAME WHERE BSC_EMPLID = :BSC_EMPLID');
+		$this->db->query('UPDATE MDS_INFO SET FIRST_NAME = :FIRST_NAME, LAST_NAME = :LAST_NAME WHERE BSC_EMPLID = :BSC_EMPLID');
 
 		$this->db->bind(':BSC_EMPLID', $data['bscid']);
 		$this->db->bind(':FIRST_NAME', $data['first_name']);
@@ -230,11 +348,21 @@ class User {
 	}
 
 	public function update_TO_User_Plans($data){
-		$this->db->query('UPDATE USER_PLANS SET STATUS_VALIDITY = :STATUS_VALIDITY, STATUS = :STATUS WHERE BSC_EMPLID = :BSC_EMPLID');
+		$date = '';
+		if ($data['end_date'] != null) {
+			$date = date('Y/m/d', strtotime($data['end_date']));
+			$this->db->query("UPDATE USER_PLANS SET STATUS_VALIDITY = :STATUS_VALIDITY, STATUS = :STATUS, END_DATE = TO_DATE(:END_DATE, 'yyyy/mm/dd HH24:MI:SS') WHERE BSC_EMPLID = :BSC_EMPLID");
+		}else{
+			$this->db->query("UPDATE USER_PLANS SET STATUS_VALIDITY = :STATUS_VALIDITY, STATUS = :STATUS WHERE BSC_EMPLID = :BSC_EMPLID");
+		}
+		
+		
+		//$date = date('Y/m/d');
 
 		$this->db->bind(':BSC_EMPLID', $data['bscid']);
 		$this->db->bind(':STATUS_VALIDITY', $data['status_validity']);
 		$this->db->bind(':STATUS', $data['status']);
+		$this->db->bind(':END_DATE', $date);
 
 		if($this->db->execute()) {
 			return true;
@@ -272,5 +400,24 @@ class User {
 		}
 	}
 
+	public function getAllStatusValues(){
+		
+			$this->db->query('
+					SELECT * FROM STATUS
+				');
+			
+			return $this->db->resultArraySet();
+		
+	}
+
+	public function getStatusByValue($value='Inactive'){
+		
+			$this->db->query('
+					SELECT * FROM STATUS WHERE DESCRIPTION = :DESCRIPTION
+				');
+			$this->db->bind(':DESCRIPTION', $value);
+			return $this->db->resultArraySet();
+		
+	}
 
 }

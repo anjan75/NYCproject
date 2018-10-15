@@ -1,5 +1,16 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
-<h3>Railroad Administration</h3>
+<div class="row">
+  <div class="col-md-6">
+    <h3>Railroad Administration</h3>    
+  </div>
+  <div class="col-md-6">
+      <div class="text-right"> 
+        <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#newRailroad" value="Add New Railroad">
+      </div>
+  </div>
+</div>
+
+
 <form  action="">
   <hr />
   <table class="table table-bordered table-striped table-sm railroad-administrator">
@@ -29,9 +40,7 @@
   </tbody>
   </table>
 
-  <div class="text-center"> 
-        <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#newRailroad" value="Add New Railroad">
-  </div>
+  
 
 </form>
 
@@ -66,16 +75,27 @@
             </div>
             <div class="col-md-3">
               
-               <select name="status" id="status" class="form-control">
+               <!-- <select name="status" id="status" class="form-control">
                       <option value="Created">CREATED</option>
                       <option value="Modified">MODIFIED</option>
                       <option value="Inactive">INACTIVE</option>
-                  </select>
+                  </select> -->
+                  <?php if(isset($data['status']) && is_array($data['status'])){ ?>
+                  <?php foreach($data['status'] as $status){ ?>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="<?php echo $status['DESCRIPTION'] ?>" id="status" name="status">
+                    <label class="form-check-label" for="Status">
+                      <?php echo $status['DESCRIPTION'] ?>
+                    </label>
+                  </div>
+                  <?php } ?>
+                  <?php } ?>
+
             </div>
           </div>
           <div class="form-group row">
             <div class="col-md-3 label-right">
-              <label for="DisplayName">Railrod Description</label>
+              <label for="DisplayName">Railroad Description</label>
             </div>
             <div class="col-md-9">
                <input class="form-control" id="description" name="description" type="text">
@@ -137,11 +157,17 @@
             </div>
             <div class="col-md-4">
               
-               <select name="status" id="status" class="form-control">
+               <!-- <select name="status" id="status" class="form-control">
                       <option value="Created">CREATED</option>
                       <option value="Modified">MODIFIED</option>
                       <option value="Inactive">INACTIVE</option>
-                  </select>
+                  </select> -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Inactive" id="status" name="status">
+                    <label class="form-check-label" for="Status">
+                      Inactive
+                    </label>
+                  </div>
             </div>
           </div>
           <div class="form-group row">

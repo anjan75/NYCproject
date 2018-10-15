@@ -3,7 +3,7 @@
 
       <div class="col-md-2">
         <a class="navbar-brand" href="<?php echo URLROOT; ?>/dashboards/index" style="padding: 0px; font-size: 14px; margin-right:0px;">
-        <img class="img-responsive" style="padding: 1px; width: 8%; height: auto;" src="../public/img/mta.png"><?php echo SITENAME; ?></a>
+        <img class="img-responsive" style="padding: 1px; width: 14%; height: auto;" src="../public/img/mta.png"><?php echo SITENAME; ?></a>
       </div>
 
       <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,7 +15,7 @@
         <ul class="navbar-nav ml-auto">
           <?php 
               $roles = array('Data Entry For Self', 'Data Entry For Others Only', 'Data Entry Administrator');            
-              if (hasPermission($roles)) {
+              if (hasPermission($roles) && (isUserPlan('1') || isUserPlan('3'))) {
           ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -26,7 +26,7 @@
             <a class="dropdown-item" href="<?php echo URLROOT; ?>/speed_inspections/index">Speed Inspection</a>
             <a class="dropdown-item" href="<?php echo URLROOT; ?>/trainRide_inspections/index">Train Ride Inspection</a>
 
-            <a class="dropdown-item" href="<?php echo URLROOT; ?>/general_inspections/get_ehost_data">EHOST DATA</a>
+           <!--  <a class="dropdown-item" href="<?php echo URLROOT; ?>/general_inspections/get_ehost_data">EHOST DATA</a> -->
 
             </div>
           </li>
@@ -50,8 +50,8 @@
           
 
           <?php 
-              $roles = array('Designated Instructor', 'Qualified Personnel', 'Data Entry Administrator', 'Data Entry For Others Only');            
-              if (hasPermission($roles)) {
+              $roles = array('Designated Instructor', 'Qualified Personnel');            
+              if (hasPermission($roles)&& (isUserPlan('2') || isUserPlan('4'))) {
           ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -75,7 +75,7 @@
           
           <?php 
               $roles = array('View Reports');            
-              if (hasPermission($roles, 'MNR')) {
+              if (hasPermission($roles, 'MNR') && isUserPlan('1')) {
           ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -93,8 +93,10 @@
           <?php } ?>
 
           <?php 
+
               $roles = array('View Reports');            
-              if (hasPermission($roles, 'LIRR')) {
+              if (hasPermission($roles, 'LIRR') && isUserPlan('3')) {
+                
           ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -113,23 +115,44 @@
 
           <?php 
               $roles = array('View Reports');            
-              if (hasPermission($roles)) {
+              if (hasPermission($roles, 'LIRR') && isUserPlan('4')) {
+
           ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Training Reports
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Training menu item</a>
-              <a class="dropdown-item" href="#">Training menu item</a>
-              <a class="dropdown-item" href="#">Training menu item</a>
-              <a class="dropdown-item" href="#">Training menu item</a>
-              <a class="dropdown-item" href="#">Training menu item</a>
-              <a class="dropdown-item" href="#">Training menu item</a>
+              <a class="dropdown-item" href="#">LIRR Training menu item</a>
+              <a class="dropdown-item" href="#">LIRR Training menu item</a>
+              <a class="dropdown-item" href="#">LIRR Training menu item</a>
+              <a class="dropdown-item" href="#">LIRR Training menu item</a>
+              <a class="dropdown-item" href="#">LIRR Training menu item</a>
+              <a class="dropdown-item" href="#">LIRR Training menu item</a>
             </div>
           </li>
           <?php } ?>
-            <?php if (isUserRole('User Data Administrator') || isUserRole('User Security Levels Administrator') || isUserRole('System Administrator')){ ?>
+
+          <?php 
+              $roles = array('View Reports');            
+              if (hasPermission($roles, 'MNR') && isUserPlan('2')) {
+
+          ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Training Reports
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">MNR Training menu item</a>
+              <a class="dropdown-item" href="#">MNR Training menu item</a>
+              <a class="dropdown-item" href="#">MNR Training menu item</a>
+              <a class="dropdown-item" href="#">MNR Training menu item</a>
+              <a class="dropdown-item" href="#">MNR Training menu item</a>
+              <a class="dropdown-item" href="#">MNR Training menu item</a>
+            </div>
+          </li>
+          <?php } ?>
+            <?php if (isUserRole('User Administrator') || isUserRole('User Security Levels Administrator') || isUserRole('IT Administrator')){ ?>
             <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             User Administration
@@ -138,7 +161,7 @@
 
          
             <?php 
-              $roles = array('User Data Administrator', 'User Security Levels Administrator');            
+              $roles = array('User Administrator', 'User Security Levels Administrator');            
               if (hasPermission($roles)) {
             ?>
             
@@ -148,7 +171,7 @@
             <?php } ?>
 
             <!-- <a class="dropdown-item" href="<?php //echo URLROOT; ?>/user_level/index">User Security Levels</a> -->
-            <?php if(isUserRole('System Administrator')){ ?>
+            <?php if(isUserRole('IT Administrator')){ ?>
            
                 <a class="dropdown-item" href="<?php echo URLROOT; ?>/IT_Administrator/index">IT-Administrator</a>
            
@@ -211,8 +234,8 @@
           <?php if(isset($_SESSION['user_id'])) : ?>
           <?php 
               $user_profile_data = "<strong>".$_SESSION['user_name']."</strong><br>";
-              $user_profile_data .= "EMPL ID: <strong>".$_SESSION['user_id']."</strong><br>";
-              $user_profile_data .= "BUSINESS UNIT ID: <strong>".$_SESSION['user_business_unit']."</strong><br>";
+              $user_profile_data .= "BSC ID: <strong>".$_SESSION['user_id']."</strong><br>";
+              $user_profile_data .= "BUSINESS UNIT: <strong>".$_SESSION['user_business_unit']."</strong><br>";
               $user_profile_data .= "DEPARTMENT ID: <strong>".$_SESSION['user_department_id']."</strong><br>";
               $user_profile_data .= "Role(s): ";
               if (isset($_SESSION['user_roles'])) {

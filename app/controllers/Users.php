@@ -152,7 +152,7 @@ class Users extends Controller {
 	}*/
 
 	public function login() {
-		//$e = $this->userModel->findUserByEmail('shyam@shyam.c');
+		//$e = $this->userModel->findUserByEmail('anjan@anjan.c');
 
 		//check for POST
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -212,10 +212,11 @@ class Users extends Controller {
 	public function createUserSession($user, $roles = null) {
 		
 		$_SESSION['user_id'] = $user['BSC_EMPLID'];
-		$_SESSION['user_email'] = $user['FIRST_NAME']."_".$user['LAST_NAME']."@mnr.org";
-		$_SESSION['user_name'] = $user['FIRST_NAME']." ".$user['LAST_NAME'];
+		$_SESSION['user_email'] = $user['FIRST_NAME']."".$user['LAST_NAME']."@mnr.org";
+		$_SESSION['user_name'] = $user['FIRST_NAME'].", ".$user['LAST_NAME'];
 		$_SESSION['user_roles'] = $user['roles'];
 		$_SESSION['user_department_id'] = $user['DEPT_ID'];
+		$_SESSION['user_plan_id'] = $user['PLAN_ID'];
 		$_SESSION['user_business_unit'] = $user['BUSINESS_UNIT'];
 		$_SESSION['user_business_unit_id'] = $user['BUSINESS_UNIT_ID'];
 
@@ -229,7 +230,9 @@ class Users extends Controller {
 		unset($_SESSION['user_name']);
 		unset($_SESSION['user_roles']);
 		unset($_SESSION['user_department_id']);
+		unset($_SESSION['user_plan_id']);
 		unset($_SESSION['user_business_unit']);
+		unset($_SESSION['user_business_unit_id']);
 
 		session_destroy();
 
