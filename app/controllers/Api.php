@@ -44,17 +44,19 @@ class Api extends Controller {
     $fieldValue = $_GET['fieldValue'];
     $name = !empty($_GET['name']) ? trim($_GET['name']) : '';
     if ($name != null) {
-      $user = $this->userModel->getUserByFilter($name, $fieldValue);
+      $users = $this->userModel->getUserByFilter($name, $fieldValue);
     }  
     $data = array();  
-    foreach ($user as $key => $value) {
-      $userIdWithName = $value['BSC_EMPLID'] .str_repeat(' ',8).$value['FIRST_NAME'].' '.$value['LAST_NAME'];
-      $row =$userIdWithName. '|' .$value['FIRST_NAME']. '|' .$value['LAST_NAME']. '|' .$value['JOBCODE']. '|' .$value['DEPTID'];
-      array_push($data, $row);
+    foreach ($users as $key => $value) {
+     /* $userIdWithName = $value['BSC_EMPLID'] .str_repeat(' ',8).$value['FIRST_NAME'].' '.$value['LAST_NAME'];
+      $row = $userIdWithName. '|' .$value['FIRST_NAME']. '|' .$value['LAST_NAME']. '|' .$value['JOBCODE']. '|' .$value['DEPTID'];
+      array_push($data, $row, $value);*/
+      $users[$key]['bscid'] = $value['BSC_EMPLID'].' '.$value['FIRST_NAME'].' '.$value['LAST_NAME'];
     }
     //print_r($data);exit();  
-   
-    echo json_encode($data);
+    
+    echo json_encode($users);
+    //print_r($users);
   }
 
 }

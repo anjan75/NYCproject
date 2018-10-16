@@ -857,7 +857,10 @@ var linecode = $('table').find('input[value="'+line_id_value+'"]').parent().next
 			});
 	});
 
-
+/****
+SELECT @ initialization 
+****/
+$('.select-single').select2();
 
 /***
 	 USER ADMIN DATA TABLE 
@@ -1024,6 +1027,9 @@ function getFieldValue(type){
     	case 'f_bscid':
             fieldValue = 0;
             break;
+        case 'gi_observed_employee':
+            fieldValue = 0;
+            break;
         case 'f_first_name':
             fieldValue = 1;
             break;
@@ -1042,10 +1048,11 @@ function getFieldValue(type){
     return fieldValue;
 }
 
+
 function handleAutocomplete() {
-    var type, fieldValue, currentEle; 
+    var type, type1, fieldValue, currentEle; 
     type = $(this).attr('name');
-    console.log(type);
+
     fieldValue = getFieldValue(type);
     currentEle = $(this);
 
@@ -1068,15 +1075,19 @@ function handleAutocomplete() {
                 success: function(res){
                     var result;
                     if (res.length) {
-                        result = $.map(res, function(obj){
-         
-                            var arr = obj.split("|");
-                            console.log(arr);
-                            console.log(fieldValue);
+                    	//console.log(res);
+                        result = $.map(res, function(u, key){
+         					
+                            //var arr = obj.split("|");
+                           // console.log(u);
+                           // console.log(key);
+                            //console.log(obj.bscid.split('|'));
+                            //console.log(fieldValue);
+                            
                             return {
-                                label: arr[fieldValue],
-                                value: arr[fieldValue],
-                                data : obj
+                                label: u.bscid,
+                                value: u.bscid,
+                                data : u
                             };
                         });
                     }
@@ -1086,11 +1097,14 @@ function handleAutocomplete() {
         },
         select: function( event, ui ) {
         	if(fieldValue == 0){
-        	resArr = ui.item.data.split(" ");
-        	console.log(resArr);
-            $('#f_bscid').val(resArr[0]); // display the selected text
-             return false; 	
-        }
+	        	resArr = ui.item.data.bscid.split(" ");
+	        	//console.log(ui.item.label);
+	            $('#'+type).val(resArr[0]); // display the selected text
+	            //$('#gi_department').val(ui.item.DEPTID); //DEPTID
+	            $('#gi_department').val(ui.item.data.DEPT_DESCR); //DEPT_DESCR
+	            $('#di_job_description').val(ui.item.data.JOBCODE_DESCR);
+	            return false; 	
+        	}
             
         }         
     });

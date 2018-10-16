@@ -14,15 +14,20 @@ class User_data extends Controller {
     $data = null;
     $users = null;
     $user_admin_roles = array('User Administrator');   
-              
+    $business_unit_id = $_SESSION['user_business_unit_id'];
     if (isUserRole('IT Administrator')) {
-      $users = $this->userModel->getUsers();
-    }elseif (hasPermission($user_admin_roles, "LIRR")) {
-      $users = $this->userModel->nonITusers(); // not IT and lirr 
-    }elseif (hasPermission($user_admin_roles, "MNR")) {
-      $users = $this->userModel->nonITusers(); // non IT MNR
+      $business_unit_id = '';
     }
-   
+
+    if (isUserRole('IT Administrator')) {
+      $users = $this->userModel->getUsers($business_unit_id);
+    }elseif (hasPermission($user_admin_roles, "LIRR")) {
+      $users = $this->userModel->nonITusers($business_unit_id); // not IT and lirr 
+
+    }elseif (hasPermission($user_admin_roles, "MNR")) {
+      $users = $this->userModel->nonITusers($business_unit_id); // non IT MNR
+    }
+
 
     for ($i=0; $i < count($users['BSC_EMPLID']); $i++) {
       $u[$users['BSC_EMPLID'][$i]]['BSC_EMPLID'] = $users['BSC_EMPLID'][$i];
@@ -61,9 +66,9 @@ class User_data extends Controller {
     $this->view('user_data/index', $data);
   }
   public function search(){
-   $data = null;
+    $data = null;
     $users = null;
-    $user_admin_roles = array('User Administrator');
+    $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
     $input_data['f_bscid'] = isset($_POST['f_bscid']) ? $_POST['f_bscid'] : null;
     $input_data['f_first_name']  = isset($_POST['f_first_name']) ? $_POST['f_first_name'] : null;
     $input_data['f_last_name']  = isset($_POST['f_last_name']) ? $_POST['f_last_name'] : null;
@@ -75,55 +80,65 @@ class User_data extends Controller {
     if (isUserRole('IT Administrator')) {
       $business_unit_id = '';
     }
+   
+    $v = new Valitron\Validator($input_data);
+    $v->rule('numeric', array('f_bscid'))->message('{field} is required');
+    /*$v->rule('length', 'bscid', '7')->message('{field} must be 7 digits length');*/
+    $v->labels(array(
+        'f_bscid' => 'BSC ID'
+    ));
     
+    if($v->validate()) {
     
     $users = $this->userModel->searchUsers($input_data, $business_unit_id);
 
-    /* if (isUserRole('IT Administrator')) {
-      $users = $this->userModel->searchUsers($input_data);
-    }elseif (hasPermission($user_admin_roles, "LIRR")) {
-      $users = $this->userModel->nonITusers(); // not IT and lirr 
-    }elseif (hasPermission($user_admin_roles, "MNR")) {
-      $users = $this->userModel->nonITusers(); // non IT MNR
-    }*/
-    for ($i=0; $i < count($users['BSC_EMPLID']); $i++) {
-      $u[$users['BSC_EMPLID'][$i]]['BSC_EMPLID'] = $users['BSC_EMPLID'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['FULL_NAME'] = $users['FULL_NAME'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['DEPARTMENT'] = $users['DEPARTMENT'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['BUSINESS_UNIT'] = $users['BUSINESS_UNIT'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['STATUS_VALIDITY'] = $users['STATUS_VALIDITY'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['STATUS'] = $users['STATUS'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['PLAN_ROLE_ID'] = $users['PLAN_ROLE_ID'][$i];
-      //$u[$users['BSC_EMPLID'][$i]]['ROLE_ID'] = $users['ROLE_ID'][$i];
-      //$u[$users['BSC_EMPLID'][$i]]['ROLE_CODE'] = $users['ROLE_CODE'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['PLAN_ID'] = $users['PLAN_ID'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['JOBCODE'] = $users['JOBCODE'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['JOBCODE_DESCR'] = $users['JOBCODE_DESCR'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['POSITION_NUMBER'] = $users['POSITION_NUMBER'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['POSITION_DESC'] = $users['POSITION_DESC'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['MGT_CTR'] = $users['MGT_CTR'][$i];
-      $u[$users['BSC_EMPLID'][$i]]['DEPT_DESCR'] = $users['DEPT_DESCR'][$i];
+      /* if (isUserRole('IT Administrator')) {
+        $users = $this->userModel->searchUsers($input_data);
+      }elseif (hasPermission($user_admin_roles, "LIRR")) {
+        $users = $this->userModel->nonITusers(); // not IT and lirr 
+      }elseif (hasPermission($user_admin_roles, "MNR")) {
+        $users = $this->userModel->nonITusers(); // non IT MNR
+      }*/
+      for ($i=0; $i < count($users['BSC_EMPLID']); $i++) {
+        $u[$users['BSC_EMPLID'][$i]]['BSC_EMPLID'] = $users['BSC_EMPLID'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['FULL_NAME'] = $users['FULL_NAME'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['DEPARTMENT'] = $users['DEPARTMENT'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['BUSINESS_UNIT'] = $users['BUSINESS_UNIT'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['STATUS_VALIDITY'] = $users['STATUS_VALIDITY'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['STATUS'] = $users['STATUS'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['PLAN_ROLE_ID'] = $users['PLAN_ROLE_ID'][$i];
+        //$u[$users['BSC_EMPLID'][$i]]['ROLE_ID'] = $users['ROLE_ID'][$i];
+        //$u[$users['BSC_EMPLID'][$i]]['ROLE_CODE'] = $users['ROLE_CODE'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['PLAN_ID'] = $users['PLAN_ID'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['JOBCODE'] = $users['JOBCODE'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['JOBCODE_DESCR'] = $users['JOBCODE_DESCR'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['POSITION_NUMBER'] = $users['POSITION_NUMBER'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['POSITION_DESC'] = $users['POSITION_DESC'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['MGT_CTR'] = $users['MGT_CTR'][$i];
+        $u[$users['BSC_EMPLID'][$i]]['DEPT_DESCR'] = $users['DEPT_DESCR'][$i];
 
 
 
-      if (!isset($u[$users['BSC_EMPLID'][$i]]['ROLES'])) {
-        $u[$users['BSC_EMPLID'][$i]]['ROLES'] = [];
+        if (!isset($u[$users['BSC_EMPLID'][$i]]['ROLES'])) {
+          $u[$users['BSC_EMPLID'][$i]]['ROLES'] = [];
+        }
+        if (!in_array($users['ROLE_CODE'][$i], $u[$users['BSC_EMPLID'][$i]]['ROLES'])) 
+        {
+          $u[$users['BSC_EMPLID'][$i]]['ROLES'][] = $users['ROLE_CODE'][$i];
+        } 
       }
-      if (!in_array($users['ROLE_CODE'][$i], $u[$users['BSC_EMPLID'][$i]]['ROLES'])) 
-      {
-        $u[$users['BSC_EMPLID'][$i]]['ROLES'][] = $users['ROLE_CODE'][$i];
-      } 
+    } else {
+      // Errors
+      ///print_r($v->errors());
+      $input_data['v_errors'] = $v->errors();
     }
 
-    /* echo "<pre>";
-    print_r($u);
-    echo "<pre>";
-    exit();*/
     if(isset($u)){
       $data['users'] = $u;
     }else{
      $data['users'] = " ";
     }
+
     $data['input_data'] = $input_data;
     $this->view('user_data/index', $data);
  
@@ -181,7 +196,7 @@ class User_data extends Controller {
     ));
     
     if($v->validate()) {
-      // to check user existed or not
+      // to check user existed or not from both lirr and mnr
         if($this->userModel->findUserByBSID($input_data['bscid']) === false) {
             $error = array();
             $error[0] = array('0' => "Enter Valid BSCID");

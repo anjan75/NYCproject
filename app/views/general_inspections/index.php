@@ -18,49 +18,60 @@
 <hr />
 <form  action="">
 
-        <div class="row">
-      <div class="col-lg-4 col-md-6">
-    <div class="form-group form-inline formcontrol">
-  <label class="col-md-5 lableforminline" for="">Testing Officer</label>
-    <input type="" class="form-control col-md-5" id="" name="">
-    </div>
+  <div class="row">
+    <div class="col-lg-4 col-md-6">
+      <div class="form-group form-inline formcontrol">
+        <label class="col-md-5 lableforminline" for="">Testing Officer</label>
+        <input type="text" class="form-control col-md-5" id="gi_bsc_id_show" name="gi_bsc_id_show" value="<?php echo $data['gi_bsc_id']; ?>" disabled>
+        <input type="hidden" class="form-control col-md-5" id="gi_bsc_id" name="gi_bsc_id" value="<?php echo $data['gi_bsc_id']; ?>">
+      </div>
     </div>
   </div>
      <div class="row">
        <div class="col-lg-4 col-md-6">
          <div class="form-group form-inline formcontrol">
-    <label class="col-md-5 lableforminline" for="">Railroad</label>
-    <input type="" class="form-control col-md-5" id="" name="">
-    </div>
+            <label class="col-md-5 lableforminline" for="">Railroad</label>
+            <select class="col-md-5 form-control select-single " name="gi_rail_road" id="gi_rail_road">
+            <?php if(isset($data['railroads']) && is_array($data['railroads']) && count($data['railroads']) > 0){ 
+                  $i=0;
+                  for ($i = 0; $i < count($data['railroads']['DESCRIPTION']); $i++){ 
+            ?>
+            <option value="<?php echo $data['railroads']['RAILROAD_ID'][$i]; ?>"><?php echo $data['railroads']['DESCRIPTION'][$i]; ?></option>
+            <?php 
+                  } 
+                } 
+            ?>
+            </select>
+            </div>
        </div>
        <div class="col-lg-4 col-md-6">
          <div class="form-group form-inline formcontrol">
      <label class="col-md-5 lableforminline" for="">Crew Number</label>
-     <input type="" class="form-control col-md-5" id="" name="">
+     <input type="" class="form-control col-md-5" id="gi_crew_number" name="gi_crew_number">
     </div>
        </div>
        <div class="col-lg-4 col-md-6">
          <div class="form-group form-inline formcontrol">
     <label class="col-md-5 lableforminline" for="">Train Number</label>
-    <input type="" class="form-control col-md-5" id="" name="">
+    <input type="" class="form-control col-md-5" id="gi_train_number" name="gi_train_number">
     </div>
        </div>
        <div class="col-lg-4 col-md-6">
-         <div class="form-group form-inline formcontrol">
-  <label class="col-md-5 lableforminline" for="">Observed Employee</label>
-    <input type="" class="form-control col-md-5" id="" name="">
-    </div>
+        <div class="form-group form-inline formcontrol">
+          <label class="col-md-5 lableforminline" for="">Observed Employee</label>
+          <input type="" class="form-control col-md-5 autocomplete-input" id="gi_observed_employee" name="gi_observed_employee">
+        </div>
        </div>
        <div class="col-lg-4 col-md-6">
          <div class="form-group form-inline formcontrol">
   <label class="col-md-5 lableforminline" for="">Department</label>
-    <input type="" class="form-control col-md-5" id="" name="">
+    <input type="" class="form-control col-md-5" id="gi_department" name="gi_department">
     </div>
        </div>
        <div class="col-lg-4 col-md-6">
         <div class="form-group form-inline formcontrol">
   <label class="col-md-5 lableforminline" for="">Job Description</label>
-    <input type="" class="form-control col-md-5" id="" name="">
+    <input type="" class="form-control col-md-5" id="di_job_description" name="di_job_description">
     </div>
        </div>
     </div>

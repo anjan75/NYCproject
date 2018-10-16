@@ -87,7 +87,7 @@ class User {
 												"Get Users List",
 												"USERS", 
 												array(
-													[":BSC_EMPLID", $id, 0],
+													[":BSC_EMPLID", '', 0],
 													[":BUSINESS_UNIT_ID", $id, 0],
 													[":STATUS", '', 0],
 													[":START", 0, 0],
@@ -106,7 +106,7 @@ class User {
 												"Get Users List",
 												"USERS", 
 												array(
-													[":BSC_EMPLID", $id, 0],
+													[":BSC_EMPLID", '', 0],
 													[":BUSINESS_UNIT_ID", $id, 0],
 													[":STATUS", '', 0],
 													[":START", 0, 0],
@@ -197,7 +197,26 @@ class User {
 	} 
 
 	public function getUserByBSID($id) {
-		$this->db->query('SELECT MDS_INFO.*, DEPARTMENTS.*, BUSINESS_UNIT.*, USER_PLANS.*, MDS_INFO.BSC_EMPLID as BSC_EMPLID
+		$business_unit_id = isset($_SESSION['user_business_unit_id']) ? $_SESSION['user_business_unit_id'] : '';
+	    if (isUserRole('IT Administrator')) {
+	      $business_unit_id = '';
+	    }
+	    if ($business_unit_id > 0) {
+	    	$this->db->query('SELECT MDS_INFO.*, DEPARTMENTS.*, BUSINESS_UNIT.*, USER_PLANS.*, MDS_INFO.BSC_EMPLID as BSC_EMPLID
+						FROM MDS_INFO 
+						LEFT JOIN USER_PLANS
+						ON MDS_INFO.BSC_EMPLID = USER_PLANS.BSC_EMPLID 
+						LEFT JOIN DEPARTMENTS
+						ON DEPARTMENTS.DEPARTMENT_ID = USER_PLANS.DEPT_ID
+						LEFT JOIN BUSINESS_UNIT
+						ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
+						WHERE MDS_INFO.BSC_EMPLID = :BSC_EMPLID
+						AND USER_PLANS.BUSINESS_UNIT_ID = :BUSINESS_UNIT_ID
+						');
+			$this->db->bind(':BSC_EMPLID', $id);
+			$this->db->bind(':BUSINESS_UNIT_ID', $business_unit_id);
+	    }else{
+	    	$this->db->query('SELECT MDS_INFO.*, DEPARTMENTS.*, BUSINESS_UNIT.*, USER_PLANS.*, MDS_INFO.BSC_EMPLID as BSC_EMPLID
 						FROM MDS_INFO 
 						LEFT JOIN USER_PLANS
 						ON MDS_INFO.BSC_EMPLID = USER_PLANS.BSC_EMPLID 
@@ -207,8 +226,9 @@ class User {
 						ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
 						WHERE MDS_INFO.BSC_EMPLID = :BSC_EMPLID
 						');
-		$this->db->bind(':BSC_EMPLID', $id);
-
+			$this->db->bind(':BSC_EMPLID', $id);
+	    }
+		
 		$row = $this->db->singleArray();
 		//print_r($row);
 		return $row;
@@ -248,8 +268,6 @@ class User {
             case  '4':
 			   $fieldName = 'DEPTID';
                break;
-
-			
 		}
 		$this->db->query("SELECT * FROM MDS_INFO WHERE UPPER($fieldName) LIKE UPPER(:BSC_EMPLID) AND WORK_FOR_AGENCY IN ('LIRRD' ,'MNCRR') ORDER BY BSC_EMPLID DESC FETCH FIRST 100 ROWS ONLY ");
 		$searchText = $id. '%';
