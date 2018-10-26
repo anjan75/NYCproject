@@ -14,7 +14,7 @@ class Tracks extends Controller {
   public function index() {
     $data = array();
     /* $data = [];*/
-    $data['tracks'] = $this->Tracks->getTracks();
+    $data['tracks'] = $this->Tracks->getTrackById();
     /* echo "<pre>";
     print_r($data);
     echo "<pre>";

@@ -24,7 +24,7 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="<?php echo URLROOT; ?>/general_inspections/index">General Inspection</a>
             <a class="dropdown-item" href="<?php echo URLROOT; ?>/speed_inspections/index">Speed Inspection</a>
-            <a class="dropdown-item" href="<?php echo URLROOT; ?>/trainRide_inspections/index">Train Ride Inspection</a>
+            <a class="dropdown-item" href="<?php echo URLROOT; ?>/train_inspections/index">Train Ride Inspection</a>
 
            <!--  <a class="dropdown-item" href="<?php echo URLROOT; ?>/general_inspections/get_ehost_data">EHOST DATA</a> -->
 

@@ -15,9 +15,10 @@
   
 
   
- 
+  
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/responsive.css">
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/jquery_datetimepicker_min.css">
   <title><?php echo SITENAME; ?></title>
 </head>
 <body>

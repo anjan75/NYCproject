@@ -16,6 +16,13 @@ class Location_types extends Controller {
     $this->view('location_types/index', $data);
   }
 
+  public function getLocationsByTypeID($type_id) {
+    
+    $locations = $this->locationTypesModel->getLocationsByTypeID($type_id);
+
+    echo json_encode($locations);
+  }
+
   //
 
   // create new testing officer

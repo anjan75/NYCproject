@@ -50,24 +50,13 @@
     </tr>
     </tbody>
     </table>
-
-    <div class="row">
-      <div class="col-md-2">
-        <input type="button" class="add-row btn btn-primary" style="margin-top: 10px;" value="Add Observation">
-      </div>
-      <div class="col-md-2">
-        <button id="" name="" class="btn btn-primary" style="margin-top: 10px;">Submit Inspection</button> 
-      </div>
-      <div class="col-md-2">
-        <button id="" name="" class="btn btn-primary" style="margin-top: 10px;">Start New Inspection</button> 
-      </div>
-      <div class="col-md-2">
-        <button id="" name="" class="btn btn-primary" style="margin-top: 10px; margin-left: 20px;">Replicate Inspection</button> 
-      </div>
-      <div class="col-md-2">
-        <button id="" name="" class="btn btn-primary" style="margin-top: 10px; margin-left: 30px;">Cancel</button> 
-      </div>
-     </div>
+           <div class="button-box col-md-12">
+                    <a href="" class="btn btn-primary" role="button" data-toggle="modal" data-target="#gi_modal">Add Observation</a>
+                    <a href="javascript:void(0);" class="btn btn-primary submit_inspection">Submit</a>
+                    <a href="" class="btn btn-primary" role="button">Start New Inspection</a>
+                    <a href="" class="btn btn-primary" role="button">Replicate Inspection</a>
+                    <a href="" class="btn btn-primary" role="button">Cancel</a>
+           </div>
     
 
 

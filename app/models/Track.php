@@ -47,15 +47,26 @@ class Track {
 	}
 
 
-	public function getTrackById($id) {
+	public function getTrackById($id='') {
 	/*	$this->db->query('SELECT * FROM LOCATION_TYPE WHERE LOCATION_TYPE_ID = :LOCATION_TYPE_ID');
 		$this->db->bind(':LOCATION_TYPE_ID', $id);
 
 		$row = $this->db->singleArray();*/
 
 
-		$query = 'BEGIN ECR2_PKG.Get_TRACK_DESIGNATION(:TRACK_DESIGNATION_ID, :TRACK_DESIGNATION); END;';
-		$row = $this->db->refcurExecFetchAll($query, "Get track List","TRACK_DESIGNATION", array(array(":TRACK_DESIGNATION_ID", $id, 1)));
+		
+		$query = 'BEGIN ECR2_PKG.Get_TRACK_DESIGNATION(:TRACK_DESIGNATION_ID, :BUSINESS_UNIT_ID, :TRACK_DESIGNATION); END;';
+		$business_unit_id = $_SESSION['user_business_unit_id'];
+		$row = $this->db->refcurExecFetchAll(
+												$query, 
+												"Get Location List",
+												"TRACK_DESIGNATION", 
+												array(
+													[":TRACK_DESIGNATION_ID", $id, 0],
+													[":BUSINESS_UNIT_ID", $business_unit_id, 0],
+												)
+											);
+		
 
 
 		return $row;

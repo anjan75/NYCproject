@@ -1,11 +1,10 @@
 <?php
-
 class Users extends Controller {
 
 	public function __construct() {
-		if(isLoggedIn()) {
-        redirect('dashboards');
-        }
+		/*if(isLoggedIn()) {
+        	redirect('dashboards');
+        }*/
 		$this->userModel = $this->model('User');
 	}
 
@@ -225,6 +224,7 @@ class Users extends Controller {
 	
 
 	public function logout() {
+		
 		unset($_SESSION['user_id']);
 		unset($_SESSION['user_email']);
 		unset($_SESSION['user_name']);
@@ -233,9 +233,13 @@ class Users extends Controller {
 		unset($_SESSION['user_plan_id']);
 		unset($_SESSION['user_business_unit']);
 		unset($_SESSION['user_business_unit_id']);
+		
+		setcookie('gif_data', '', time() - 3600, '/');
+		setcookie('tif_data', '', time() - 3600, '/');
+		setcookie('sif_data', '', time() - 3600, '/');
 
+		
 		session_destroy();
-
 		redirect('users/login');
 	} 
 }

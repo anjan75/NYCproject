@@ -251,33 +251,86 @@ class User {
 
 	//User Admin Filter 
 	public function getUserByFilter($id, $value) {
-		
+
+		$searchText = $id. '%';
 		switch ($value) {
 			case '0':
-			$fieldName = 'BSC_EMPLID';   
+			$fieldName = 'MDS_INFO.BSC_EMPLID';   
 				break;
 			case '1':
-				$fieldName = 'FIRST_NAME';
+				$fieldName = 'MDS_INFO.FIRST_NAME';
 				break;
 			case  '2':
-			   $fieldName = 'LAST_NAME';
+			   $fieldName = 'MDS_INFO.LAST_NAME';
 			   break;
 			case  '3':
-			   $fieldName = 'JOBCODE';
+			   $fieldName = 'MDS_INFO.JOBCODE';
                break;
             case  '4':
-			   $fieldName = 'DEPTID';
+			   $fieldName = 'USER_PLANS.DEPT_ID';
                break;
+            case  '5':
+			   $fieldName = 'MDS_INFO.BSC_EMPLID';   
+			   break;
 		}
-		$this->db->query("SELECT * FROM MDS_INFO WHERE UPPER($fieldName) LIKE UPPER(:BSC_EMPLID) AND WORK_FOR_AGENCY IN ('LIRRD' ,'MNCRR') ORDER BY BSC_EMPLID DESC FETCH FIRST 100 ROWS ONLY ");
-		$searchText = $id. '%';
-		$this->db->bind(':BSC_EMPLID', $searchText);
-		//$this->db->execute();
-		//while ($row = $this->db->fetch()){
-			//print_r($row);exit();
+		$business_unit_id = isset($_SESSION['user_business_unit_id']) ? $_SESSION['user_business_unit_id'] : '';
+	    if (isUserRole('IT Administrator')) {
+	      $business_unit_id = '';
+	    }
 
-		//}
-		return $this->db->resultArraySet();
+		if ($value == 5) {
+
+			$query = ' SELECT *
+				FROM MDS_INFO
+				';
+		    $query .= ' WHERE (
+		    				UPPER('.$fieldName.') LIKE UPPER(:SEARCH_VALUE) 
+		    				OR UPPER(MDS_INFO.FIRST_NAME) LIKE UPPER(:SEARCH_VALUE1) 
+		    				OR UPPER(MDS_INFO.LAST_NAME) LIKE UPPER(:SEARCH_VALUE2)
+		    			)';
+		    $query .= ' AND MDS_INFO.BSC_EMPLID != :LOGIN_USER_ID ';
+
+		  
+
+		    $query .= ' ORDER BY MDS_INFO.BSC_EMPLID DESC FETCH FIRST 100 ROWS ONLY ';
+		}else{
+			$query = ' SELECT *
+				FROM MDS_INFO
+				INNER JOIN USER_PLANS
+				ON USER_PLANS.BSC_EMPLID = MDS_INFO.BSC_EMPLID
+				INNER JOIN DEPARTMENTS
+				ON USER_PLANS.DEPT_ID = DEPARTMENTS.DEPARTMENT_ID
+				INNER JOIN BUSINESS_UNIT
+				ON BUSINESS_UNIT.BUSINESS_UNIT_ID = USER_PLANS.BUSINESS_UNIT_ID
+				';
+		    //$query .= ' WHERE UPPER('.$fieldName.') LIKE UPPER(:SEARCH_VALUE) ';
+		    $query .= ' WHERE (
+		    				UPPER('.$fieldName.') LIKE UPPER(:SEARCH_VALUE) 
+		    				OR UPPER(MDS_INFO.FIRST_NAME) LIKE UPPER(:SEARCH_VALUE1) 
+		    				OR UPPER(MDS_INFO.LAST_NAME) LIKE UPPER(:SEARCH_VALUE2)
+		    			)';
+
+		    $query .= ' AND MDS_INFO.BSC_EMPLID != :LOGIN_USER_ID ';
+		    if ($business_unit_id > 0) {
+		    	$query .= " AND USER_PLANS.BUSINESS_UNIT_ID = :BUSINESS_UNIT_ID ";	
+		    }
+
+		    $query .= ' ORDER BY MDS_INFO.BSC_EMPLID DESC FETCH FIRST 100 ROWS ONLY ';
+		}
+		
+		
+
+
+	    $this->db->query($query);
+	    $this->db->bind(':SEARCH_VALUE', $searchText);
+	    $this->db->bind(':SEARCH_VALUE1', $searchText);
+	    $this->db->bind(':SEARCH_VALUE2', $searchText);
+	    $this->db->bind(':BUSINESS_UNIT_ID', $business_unit_id);
+	    $this->db->bind(':LOGIN_USER_ID', $_SESSION['user_id']);
+
+	    $data = $this->db->resultArraySet();
+
+		return $data;
 	}
 
 	/*public function getEHOSTDATA() {
@@ -429,13 +482,11 @@ class User {
 	}
 
 	public function getStatusByValue($value='Inactive'){
-		
 			$this->db->query('
 					SELECT * FROM STATUS WHERE DESCRIPTION = :DESCRIPTION
 				');
 			$this->db->bind(':DESCRIPTION', $value);
 			return $this->db->resultArraySet();
-		
 	}
 
 }

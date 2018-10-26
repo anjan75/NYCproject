@@ -5,10 +5,8 @@ class Tasks extends Controller {
   public function __construct() {
     if(!isLoggedIn()) {
       redirect('users/login');
-
-    //$this->postModel = $this->model('Post');
-    //$this->userModel = $this->model('User');
     }
+    $this->tasksModel = $this->model('task');
   }
   
 
@@ -19,6 +17,11 @@ class Tasks extends Controller {
     //$posts = $this->postModel->getPostsByUserId($id);
 
     $this->view('tasks/index');
+  }
+  public function getTaskRules($task_id){
+      $rules = $this->tasksModel->getTaskRules($task_id);
+
+      echo json_encode($rules);
   }
 }
 

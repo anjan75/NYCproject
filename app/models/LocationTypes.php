@@ -46,12 +46,26 @@ class LocationTypes {
 	}
 
 
-	public function getLocationTypeById($id) {
-		$this->db->query('SELECT * FROM LOCATION_TYPE WHERE LOCATION_TYPE_ID = :LOCATION_TYPE_ID');
+	public function getLocationTypeById($id='') {
+		/*$this->db->query('SELECT * FROM LOCATION_TYPE WHERE LOCATION_TYPE_ID = :LOCATION_TYPE_ID');
 		$this->db->bind(':LOCATION_TYPE_ID', $id);
 
 		$row = $this->db->singleArray();
 
+		return $row;*/
+		/*$id = 70;*/
+		$query = 'BEGIN ECR2_PKG.Get_LOCATION_TYPE(:LOCATION_TYPE_ID, :BUSINESS_UNIT_ID, :LOCATION_TYPE); END;';
+		$business_unit_id = $_SESSION['user_business_unit_id'];
+		$row = $this->db->refcurExecFetchAll(
+												$query, 
+												"Get Rail Road List",
+												"LOCATION_TYPE", 
+												array(
+													[":LOCATION_TYPE_ID", $id, 0],
+													[":BUSINESS_UNIT_ID", $business_unit_id, 0],
+												)
+											);
+		
 		return $row;
 	} 
 	public function getLocationTypeByName($name) {
@@ -62,7 +76,14 @@ class LocationTypes {
 
 		return $row;
 	} 
-	
+	public function getLocationsByTypeID($type_id){
+		$this->db->query('SELECT * FROM LOCATION WHERE LOCATION_TYPE_ID = :LOCATION_TYPE_ID');
+		$this->db->bind(':LOCATION_TYPE_ID', $type_id);
+
+		$rows = $this->db->resultArraySet();
+
+		return $rows;
+	}
 	//Show Users data in in USER ADMINISTRATOR
 	public function getLocationTypes($inputs = null) {
 		$page = isset($inputs['page']) ? $inputs['page'] : 1;

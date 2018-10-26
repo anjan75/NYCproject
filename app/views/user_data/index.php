@@ -120,12 +120,12 @@
                   <input class="form-control autocomplete-input" id="f_mgmt_ctr_id" name="f_mgmt_ctr_id" type="text" autocomplete="off" placeholder="Management Center ID" value="<?php echo isset($data['input_data']['f_mgmt_ctr_id']) ? $data['input_data']['f_mgmt_ctr_id'] : ''; ?>">
                 </div>
               </div>
-              <div class="col-lg-2 col-md-4 col-xs-12 Permissions paddingspace mobilefilter">
+              <!-- <div class="col-lg-2 col-md-4 col-xs-12 Permissions paddingspace mobilefilter">
                   <div class="form-group formcontrol">
                   <label for="Permissions" class="lablestyles">Permissions</label>
-                  <!-- <input type="text" class="form-control autocomplete-input" id="f_permissions" name="f_permissions" placeholder="Permissions"> 
+                  <-- <input type="text" class="form-control autocomplete-input" id="f_permissions" name="f_permissions" placeholder="Permissions"> 
                 #TODO Dynamic roles 
-                  -->
+                  --
 
                   <select name="f_user_role" id="f_user_role" class="form-control statusselect">
                     <option value="">Select</option>
@@ -140,7 +140,7 @@
                     <option value="">User Administrator</option> 
                   </select>                   
                 </div>
-              </div>
+              </div> -->
               <!--
                 #TODO dynamic status
                 --->
@@ -345,7 +345,9 @@
                 <div class="form-group form-inline">
                   <label class="col-md-5 status_validity_end_date" for="status validity end date">End Date</label>
                   <input name="end_date" class="form-control col-md-7 status_validity_end_date date" data-date-container='#end_date' id="end_date" type="text" placeholder="MM/DD/YY">
+                  <div class="date_container"></div>
 
+                  
                 </div>
               </div>
             </div>

@@ -206,7 +206,9 @@ background: #0099ff !important;
 
 /** General Inspection **/
 
-
+.selectboxheight{
+	height:auto !important;
+}
 
 
 

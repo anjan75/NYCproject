@@ -1,6 +1,4 @@
-
 <?php
-
 class RailRoad {
 
 	private $db;

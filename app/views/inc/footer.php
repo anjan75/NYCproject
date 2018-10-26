@@ -13,9 +13,14 @@
 <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.5/js/dataTables.rowReorder.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
+<script type="text/javascript" src="<?php echo URLROOT; ?>/js/jquery_datetimepicker_full_min.js"></script>
 <script type="text/javascript" src="<?php echo URLROOT; ?>/js/main.js" ></script>
 <script type="text/javascript" src="<?php echo URLROOT; ?>/js/functions.js"></script>
 
-
-</body>
+<!-- <script>
+	$("#gif_line").select2({
+  maximumSelectionLength: 2
+});
+</script>
+ --></body>
 </html>
