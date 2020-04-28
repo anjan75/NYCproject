@@ -254,7 +254,7 @@
                 </div><div class="form-group">
                   <div class="row">
                     <label class="col-md-4 text-right" for="">Observed Speed Source</label>
-                    <input type="text" class="col-md-2 form-control" id="sif_observed_speed_sourse" name="sif_observed_speed_sourse">
+                    <input type="text" class="col-md-2 form-control" id="sif_observed_speed_source" name="sif_observed_speed_source">
                   </div>
                 </div>
 
@@ -394,7 +394,7 @@
                 <a href="" class="btn btn-primary" role="button">Start New Inspection</a>
                 <a href="" class="btn btn-primary" role="button">Replicate Inspection</a>
                 <a href="mylink.php" class="btn btn-primary" role="button">Cancel</a> -->
-                <a href="javascript:void(0);" class="btn btn-primary add_observation_buttion" role="button" >Add Observation</a>
+                <a href="javascript:void(0);" class="btn btn-primary add_observation_button" role="button" >Add Observation</a>
                     <a href="javascript:void(0);" class="btn btn-primary submit_si_inspection">Submit</a>
                     <a href="javascript:void(0);" class="btn btn-primary submit_new_si_inspection" role="button">Start New Inspection</a>
                     <a href="javascript:void(0);" class="btn btn-primary" role="button">Replicate Inspection</a>

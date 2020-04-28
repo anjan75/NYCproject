@@ -32,6 +32,12 @@ class GeneralInspection {
 		$this->db->bind(':ENTERED_BY', $data['entered_by']);
 		$this->db->bind(':CREATION_DATE', '');
 
+	/*	echo "<pre>";
+		print_r($data);
+		echo "<pre>";
+		exit();*/
+
+
 		if($this->db->execute()) {
 			//$id = $this->db->lastInsertId();
 			return true;
@@ -45,7 +51,7 @@ class GeneralInspection {
 		print_r($data);
 		echo "<pre>";
 		exit();*/
-		$query = "BEGIN ECR2_PKG.Add_INSPECTION_OBSERVATIONS(:INSPECTION_ID, :OBSERVATION_NUM, :LINE, :LOCATION_TYPE, :LOCATION, :MILEPOST, :OBSERVATION_TYPE, :MONTHLY_TEST_FLAG, :TASK, :RULES, :OUTCOMES, :NON_COMPLIANT, :OBS_SPEED, :POSTED_SPEED, :OBS_SPEED_SRC, TO_DATE(:OBSERVATION_DATE, 'MM/DD/YYYY'), :COMMENTS, :CREATED_BY, :CREATION_DATE ); END;"; //'YYYY-MM-DD HH24:MI:SS'
+		$query = "BEGIN ECR2_PKG.Add_INSPECTION_OBSERVATIONS(:INSPECTION_ID, :OBSERVATION_NUM, :LINE, :LOCATION_TYPE, :LOCATION, :MILEPOST, :OBSERVATION_TYPE, :MONTHLY_TEST_FLAG, :TASK, :RULES, :OUTCOMES, :NON_COMPLIANT, :OBS_SPEED, :POSTED_SPEED, :OBS_SPEED_SRC, TO_DATE(:OBSERVATION_DATE, 'MM/DD/YYYY'), :COMMENTS, :CREATED_BY, :CREATION_DATE, :TRACK_DESIGNATION_ID,:ENGINE_NUM ); END;"; //'YYYY-MM-DD HH24:MI:SS'
 		$this->db->query($query);
 		/*
 		$query = "BEGIN ECR2_PKG.Add_INSPECTION_OBSERVATIONS(:OBSERVATION_NUM, :LINE, :LOCATION_TYPE, :LOCATION, :MILEPOST, :OBSERVATION_TYPE, :MONTHLY_TEST_FLAG, :TASK, :RULES, :OUTCOMES, :NON_COMPLIANT, :OBS_SPEED, :POSTED_SPEED, :OBS_SPEED_SRC, TO_DATE(:OBSERVATION_DATE, 'MM/DD/YYYY'), :COMMENTS, :CREATED_BY, :CREATION_DATE ); END;"; //'YYYY-MM-DD HH24:MI:SS'
@@ -71,6 +77,8 @@ class GeneralInspection {
 		$this->db->bind(':COMMENTS', $data['comments']);
 		$this->db->bind(':CREATED_BY', $data['created_by']);
 		$this->db->bind(':CREATION_DATE', '');
+		$this->db->bind(':TRACK_DESIGNATION_ID', $data['track_designation_id']);
+		$this->db->bind(':ENGINE_NUM', $data['engine_num']);
 
 
 

@@ -368,7 +368,7 @@
           </div>
         </div>
         <div class="button-box col-md-12">
-                    <a href="javascript:void(0);" class="btn btn-primary add_observation_buttion" role="button" >Add Observation</a>
+                    <a href="javascript:void(0);" class="btn btn-primary add_observation_button" role="button" >Add Observation</a>
                     <a href="javascript:void(0);" class="btn btn-primary submit_gi_inspection">Submit</a>
                     <a href="javascript:void(0);" class="btn btn-primary submit_new_gi_inspection" role="button">Start New Inspection</a>
                     <a href="javascript:void(0);" class="btn btn-primary" role="button">Replicate Inspection</a>

@@ -92,7 +92,7 @@ class General_inspections extends Controller {
             }
               $obj_data['inspection_id'] = ''; //$inspection_id;
               $obj_data['observation_num'] = $gif_obj_key+1;
-              $obj_data['line'] = (isset($obj_input_data['gif_line']) && !empty($obj_input_data['gif_line'])) ? $obj_input_data['gif_line'] : 1;//NULL
+              $obj_data['line'] = (isset($obj_input_data['gif_line']) && !empty($obj_input_data['gif_line'])) ? $obj_input_data['gif_line'] : '';//NULL
               $obj_data['location_type'] = $obj_input_data['gif_location_type'];
               $obj_data['location'] = $obj_input_data['gif_location'];
               $obj_data['milepost'] = $obj_input_data['gif_milepost'];
@@ -108,6 +108,8 @@ class General_inspections extends Controller {
               $obj_data['observation_date'] = date('m-d-Y', strtotime($obj_input_data['gif_date']));
               $obj_data['comments'] = $obj_input_data['gif_comment'];
               $obj_data['created_by'] = $_SESSION['user_id'];
+              $obj_data['track_designation_id'] = ''; //$obj_input_data['']
+              $obj_data['engine_num'] = ''; // $obj_input_data['']
 
               $this->generalInspectionModel->CreateGeneralInspectionObservation($obj_data);
           }

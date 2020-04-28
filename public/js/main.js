@@ -177,7 +177,7 @@ $(document).ready(function(){
 		format:'m/d/y',
 	});
 
-	jQuery('#gif_date, #tif_date, #sif_date').datetimepicker({
+	jQuery('#gif_date, #tif_date, #sif_date, #oif_date').datetimepicker({
 		format:'m/d/Y',
 		timepicker:false,
 		minDate:'-1970/01/07',//yesterday is minimum date(for today use 0 or -1970/01/01)
@@ -1095,7 +1095,7 @@ $(document).on("submit", "#gif", function(e){
 });
 
 //General inspection filed validation
-$(document).on('click', '.add_observation_buttion', function(e){
+$(document).on('click', '.add_observation_button', function(e){
 	e.preventDefault();
 	/*if (
 		$('#gi_observed_employee').val() != ''
@@ -1336,7 +1336,7 @@ $(document).on("submit", "#tif", function(e){
 });
 
 //Train inspection filed validation
-$(document).on('click', '.add_observation_buttion', function(e){
+$(document).on('click', '.add_observation_button', function(e){
 	e.preventDefault();
 	/*if (
 		$('#ti_observed_employee').val() != ''
@@ -1530,8 +1530,7 @@ $(document).on("submit", "#sif", function(e){
 		}
 
 
-		ob_row += '<tr>'+
-      '<td id="ob" scope="row">'+k+'</td>'+
+		ob_row += '<tr>'+'<td id="ob" scope="row">'+k+'</td>'+
       '<td style="text-align: center;"><a href="#" data-toggle="modal" data-target="#si_modal"><i class="fas fa-pen"></i></a></td>'+
       '<td style="text-align: center;"><a class="btnDelete" href="#"><i class="far fa-trash-alt"></i></a></td>'+
       '<td>'+ ob.sif_date+'</td>'+
@@ -1555,7 +1554,7 @@ $(document).on("submit", "#sif", function(e){
 });
 
 //Speed inspection filed validation
-$(document).on('click', '.add_observation_buttion', function(e){
+$(document).on('click', '.add_observation_button', function(e){
 	e.preventDefault();
 	/*if (
 		$('#si_observed_employee').val() != ''
@@ -1634,7 +1633,232 @@ $(document).on('submit', '#siform', function(e){
     
 });
 
-//End Speed 
+//End Speed Inspection//
+
+
+
+
+
+
+/****
+OperatingYard Inspections Tasks 
+****/
+$(document).on("change", "#oif_task", function(e){
+	e.preventDefault();
+	var task_id = $(this).val();
+	$.ajax({
+			type: 'POST',
+			url: base_url+'/tasks/getTaskRules/'+task_id,
+			data: task_id,
+			success: function(data){
+				var data = JSON.parse(data);
+				var rule_data  = "<option>Select Option</option>";
+				$.each(data, function(ekey, err){
+					rule_data +=	'<option value="'+err.RULE_ID+'">'+err.DESCRIPTION+'</option>';
+				});
+
+				$('#oif_rule').html(rule_data);
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});
+});
+
+$(document).on("change", "#oif_location_type", function(e){
+	e.preventDefault();
+	var location_type_id = $(this).val();
+	$.ajax({
+			type: 'POST',
+			url: base_url+'/location_types/getLocationsByTypeID/'+location_type_id,
+			data: location_type_id,
+			success: function(data){
+				var data = JSON.parse(data);
+				var loc_data  = "<option>Select Option</option>";
+				$.each(data, function(ekey, err){
+					loc_data +=	'<option value="'+err.LOCATION_ID+'">'+err.DESCRIPTION+'</option>';
+				});
+
+				$('#oif_location').html(loc_data);
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});
+});
+
+/***
+Operating inspection non complaint raido box
+***/
+$(document).on('change', 'input[name="oif_result"]', function(){
+	console.log(this.value);
+	if (this.value == 'non_compliant') {
+		$('.oif_non_compliant_div').removeAttr('style');
+		$('#oif_non_compliant1, #oif_comment').attr('required', 'required');
+	}else{
+		var style = {
+			'right' : '20',
+			'display': 'none'
+		};
+		$('input[name="oif_non_compliant"]').prop('checked', false);
+		
+		$('.oif_non_compliant_div').css(style);
+		$('#oif_non_compliant1, #oif_comment').removeAttr('required');
+	}
+});
+
+// Operating Inspection observations cookie
+$(document).on("submit", "#oif", function(e){
+	e.preventDefault();
+	var return_data = [];
+	var formData = $(this).serializeArray();
+	var form_array = {};
+
+    $.map(formData, function(n, i){
+        form_array[n['name']] = n['value'];
+    });
+    // Retrive desction of selected item
+    form_array.oif_location_type_desc = $("#oif_location_type option:selected").text();
+    form_array.oif_location_desc = $("#oif_location option:selected").text();
+    form_array.oif_milepost_desc = $("#oif_milepost option:selected").text();
+    form_array.oif_task_desc = $("#oif_task option:selected").text();
+    form_array.oif_line_desc = $("#oif_line option:selected").text();
+    form_array.oif_rule_code = $("#oif_rule option:selected").text();
+    
+
+    form_array.oif_result_value = $("input[name='oif_non_compliant']:checked").val();
+	
+	if (checkCookie('oif_data')) {
+		return_data = getCookie('oif_data');
+		return_data = JSON.parse(return_data);
+		return_data.push(form_array);
+	}else{
+		return_data.push(form_array);
+	}
+	// Here we will get all the oi obsrvation list 
+	// loop and show in table and remove duplecates
+	//#TODO  check duplicate 
+	var ob_row = '';
+	$.each(return_data, function(k, ob){
+		k = k+1;
+		/*var dNow = new Date(ob.oif_date + ' EDT'); // EDT timezone
+		var localdate= (dNow.getMonth()+1) + '/' + dNow.getDate() + '/' + dNow.getFullYear() + ' ' + dNow.getHours() + ':' + dNow.getMinutes();
+		var oif_date = (dNow.getMonth()+1) + '/' + dNow.getDate() + '/' + dNow.getFullYear() ;
+		var oif_time = formatAMPM(dNow); //dNow.getHours() + ':' + dNow.getMinutes();*/
+		//console.log(dNow.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }));
+		if (typeof ob.oif_result_value !== "undefined") {
+			var oif_result_value = ob.oif_result_value;
+		}else{
+			var oif_result_value = 'Complaint';
+		}
+
+
+		ob_row += '<tr>'+
+      '<td id="ob" scope="row">'+k+'</td>'+
+      '<td style="text-align: center;"><a href="#" data-toggle="modal" data-target="#oi_modal"><i class="fas fa-pen"></i></a></td>'+
+      '<td style="text-align: center;"><a class="btnDelete" href="#"><i class="far fa-trash-alt"></i></a></td>'+
+      '<td>'+ ob.oif_date+'</td>'+
+      '<td>'+ ob.oif_time+'</td>'+
+      '<td>'+ ob.oif_rule_code+'</td>'+
+      '<td>'+ oif_result_value+'</td>'+
+	  '</tr>';
+		
+	});
+	$('.operating-inspection tbody').html(ob_row);
+
+	var single_oif_data = JSON.stringify(return_data);
+	delete_cookie('oif_data');
+	setCookie('oif_data', single_oif_data, 1);
+	
+	var return_data = getCookie('oif_data');
+	return_data = JSON.parse(return_data);
+	$('#oi_modal').find('form')[0].reset();
+	$('#oi_modal').modal('toggle');
+	return true;
+});
+
+//Operating inspection filed validation
+$(document).on('click', '.add_observation_button', function(e){
+	e.preventDefault();
+	/*if (
+		$('#oi_observed_employee').val() != ''
+		//&& $('#oi_rail_road option:selected').value != ''
+		&& $('#oi_crew_number').val() != ''
+		&& $('#oi_train_number').val() != ''
+		&& $('#oi_job_description').val() != ''
+		&& $('#oi_department').val() != ''
+		) {
+		$('#oi_modal').modal('toggle');
+	}else{
+		alert('Please enter Inspection fields'); // we can customize it later
+	}*/
+	$('#oi_modal').modal('toggle');
+});
+var submit_new_oi_inspection = null;
+$(document).on('click', '.submit_new_oi_inspection', function(e){
+	e.preventDefault();
+	window.submit_new_oi_inspection = true;
+	$('#oiform').submit();
+});
+
+$(document).on('click', '.submit_oi_inspection', function(e){
+	e.preventDefault();
+	window.submit_new_oi_inspection = null;
+	$('#oiform').submit();
+});
+$(document).on('submit', '#oiform', function(e){
+	e.preventDefault();
+	var formData = $(this).serializeArray();
+	var form_array = {};
+
+    $.map(formData, function(n, i){
+        form_array[n['name']] = n['value'];
+    });
+    
+
+    $.ajax({
+			type: 'POST',
+			//url: base_url+'/Operating_inspections/create_gi',
+			url: base_url+'/OperatingYard_inspections/create_operatingyard_inspection',
+			data: form_array,
+			success: function(data){
+				
+				if (typeof data === 'string' || data instanceof String) {
+					data.replace(/(^[ \t]*\n)/gm, "")
+
+					if (!String.prototype.trim) {
+					  String.prototype.trim = function () {
+					    return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+					  };
+					}
+					data.trim();
+
+					if (window.submit_new_oi_inspection == true) {				    	
+				    	//empty form and table
+				    	$('#oiform').find('input[type=text]').val('');
+				    	$('#oi_rail_road').val('').trigger('change');
+
+				    	$('.operating-inspection tbody').html('');
+				    	$('#oi_bsc_id_show').val($('#oi_bsc_id').val());
+
+				    }else if (data == 'success') {
+						window.location.href = base_url+'/dashboards/index';
+					}
+					console.log(data);
+				}else{
+					var data = JSON.parse(data);
+					console.log(data);
+				}
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});
+    
+});
+
+
+//End OperatinYard Inspection//
 
 
 
@@ -1819,6 +2043,10 @@ function getFieldValue(type){
             fieldValue = 5;
             ac_value = ac_label = 'u.bscid';
             break;
+        case 'oi_observed_employee':
+            fieldValue = 5;
+            ac_value = ac_label = 'u.bscid';
+            break;
         default:
             break;
     }
@@ -1916,10 +2144,10 @@ function handleAutocomplete() {
 	        	resArr = ui.item.data.bscid.split(" ");
 	        	//console.log(ui.item.data);
 	            $('#'+type).val(resArr[0]); // display the selected text
-	            $('#gi_department_id, #ti_department_id, #si_department_id').val(ui.item.data.DEPTID); //DEPTID
-	            $('#gi_department, #ti_department, #si_department').val(ui.item.data.DEPT_DESCR); //DEPT_DESCR
-	            $('#gi_jobcode_id, #ti_jobcode_id, #si_jobcode_id').val(ui.item.data.JOBCODE); //JOBCODE
-	            $('#gi_job_description, #ti_job_description, #si_job_description').val(ui.item.data.JOBCODE_DESCR); //JOBCODE_DESCR
+	            $('#gi_department_id, #ti_department_id, #si_department_id, #oi_department_id').val(ui.item.data.DEPTID); //DEPTID
+	            $('#gi_department, #ti_department, #si_department, #oi_department').val(ui.item.data.DEPT_DESCR); //DEPT_DESCR
+	            $('#gi_jobcode_id, #ti_jobcode_id, #si_jobcode_id, #oi_jobcode_id ').val(ui.item.data.JOBCODE); //JOBCODE
+	            $('#gi_job_description, #ti_job_description, #si_job_description, #oi_job_description').val(ui.item.data.JOBCODE_DESCR); //JOBCODE_DESCR
 	            return false; 	
         	}
         }         

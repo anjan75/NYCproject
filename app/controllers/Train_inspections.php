@@ -107,6 +107,8 @@ exit();*/
               $obj_data['observation_date'] = date('m-d-Y', strtotime($obj_input_data['tif_date']));
               $obj_data['comments'] = $obj_input_data['tif_comment'];
               $obj_data['created_by'] = $_SESSION['user_id'];
+              $obj_data['track_designation_id'] = ''; //$obj_input_data['']
+              $obj_data['engine_num'] = ''; // $obj_input_data['']
 
               $this->trainInspectionModel->CreateTrainInspectionObservation($obj_data);
           }
